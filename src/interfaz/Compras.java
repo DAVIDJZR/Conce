@@ -6,38 +6,20 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import java.io.FileWriter;
+import java.util.Calendar;
 
 public class Compras extends javax.swing.JFrame {
-       DefaultTableModel modelo;
+    DefaultTableModel modelo;
 
     public Compras() {
         initComponents();
-        
-        txtFecha.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                String text = txtFecha.getText().replace("-", "");
+        Calendar maxFecha = Calendar.getInstance();
+        maxFecha.set(2026, Calendar.APRIL, 27); // OJO: abril = Calendar.APRIL
 
-                if(text.length() > 8) text = text.substring(0,8);
+        txtFecha2.setMaxSelectableDate(maxFecha.getTime());
 
-                StringBuilder formatted = new StringBuilder();
-
-                for(int i = 0; i < text.length(); i++){
-                    if(i == 4 || i == 6){
-                        formatted.append("-");
-                    }
-                    formatted.append(text.charAt(i));
-                }
-
-                txtFecha.setText(formatted.toString());
-            }
-
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                char c = evt.getKeyChar();
-                if(!Character.isDigit(c) && c != '.'){
-                    evt.consume();
-                }
-            }
-        });
+        tablaCompra.setRowSelectionAllowed(true);
+        cargartabla("");
         
         java.awt.event.KeyAdapter soloNumeros = new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -63,28 +45,43 @@ public class Compras extends javax.swing.JFrame {
     }
     
     private void inhabilitar (){
-        txtFecha.setEnabled(false);
+        txtFecha2.setEnabled(false); 
         txtTotal.setEnabled(false);
         cboIdProveedor.setEnabled(false);
         cboIdAuto.setEnabled(false);
-        
-        txtFecha.setText("YYYY-MM-DD");
+
+        txtFecha2.setDate(null);
         txtTotal.setText("");
     }
      
     private void habilitar(){
-        txtFecha.setEnabled(true);
+        txtFecha2.setEnabled(true);
         txtTotal.setEnabled(true);
         cboIdProveedor.setEnabled(true);
         cboIdAuto.setEnabled(true);
-        
-        txtFecha.setText("");
+
+        txtFecha2.setDate(null);
+    }
+    
+    private void seleccionarCombo(javax.swing.JComboBox<String> combo, String id){
+        for(int i = 0; i < combo.getItemCount(); i++){
+            String item = combo.getItemAt(i);
+            if(item.startsWith(id + " -")){
+                combo.setSelectedIndex(i);
+                break;
+            }
+        }
     }
     
     private void cargartabla(String valor){
         String [] titulos ={"ID","Fecha","Total","ID proveedor","ID auto"};
         String [] registros = new String[5];
-        modelo = new DefaultTableModel(null,titulos);
+        modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // 👈 bloquea edición
+            }
+        };
         conexion mysql = new conexion();
         Connection cn = mysql.getConexion();
         String sSQL = "SELECT idCompra, fecha, total, idProveedor, idAuto FROM compras WHERE (idCompra) LIKE '%"+valor+"%'";
@@ -156,22 +153,21 @@ public class Compras extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtFecha = new javax.swing.JTextField();
         txtTotal = new javax.swing.JTextField();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        btnRegresar = new javax.swing.JButton();
         cboIdProveedor = new javax.swing.JComboBox<>();
         cboIdAuto = new javax.swing.JComboBox<>();
+        txtFecha2 = new com.toedter.calendar.JDateChooser();
+        btnEditar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCompra = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnReporte = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
 
@@ -186,12 +182,6 @@ public class Compras extends javax.swing.JFrame {
         jLabel3.setText("idProveedor");
 
         jLabel4.setText("idAuto");
-
-        txtFecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFechaActionPerformed(evt);
-            }
-        });
 
         txtTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,16 +210,28 @@ public class Compras extends javax.swing.JFrame {
             }
         });
 
-        btnRegresar.setText("Regresar");
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+        cboIdProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboIdProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
+                cboIdProveedorActionPerformed(evt);
             }
         });
 
-        cboIdProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         cboIdAuto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -246,10 +248,10 @@ public class Compras extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                             .addComponent(txtTotal, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboIdProveedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cboIdAuto, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cboIdProveedor, 0, 413, Short.MAX_VALUE)
+                            .addComponent(cboIdAuto, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtFecha2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
                         .addGap(97, 97, 97))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnNuevo)
@@ -258,16 +260,18 @@ public class Compras extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnCancelar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnRegresar)
-                        .addContainerGap(266, Short.MAX_VALUE))))
+                        .addComponent(btnEditar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFecha2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
@@ -285,7 +289,8 @@ public class Compras extends javax.swing.JFrame {
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
-                    .addComponent(btnRegresar))
+                    .addComponent(btnEditar)
+                    .addComponent(btnEliminar))
                 .addGap(26, 26, 26))
         );
 
@@ -302,6 +307,11 @@ public class Compras extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablaCompra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaCompraMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaCompra);
 
         jLabel5.setText("Buscar registro por ID");
@@ -310,20 +320,6 @@ public class Compras extends javax.swing.JFrame {
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
-            }
-        });
-
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-
-        btnEditar.setText("Editar");
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarActionPerformed(evt);
             }
         });
 
@@ -358,12 +354,8 @@ public class Compras extends javax.swing.JFrame {
                                 .addGap(37, 37, 37)
                                 .addComponent(btnBuscar))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnEditar)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnEliminar)
-                                .addGap(18, 18, 18)
                                 .addComponent(btnReporte)
-                                .addGap(77, 77, 77)
+                                .addGap(18, 18, 18)
                                 .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 90, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -378,13 +370,11 @@ public class Compras extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnEditar)
                     .addComponent(btnReporte)
                     .addComponent(jToggleButton1))
-                .addGap(19, 19, 19))
+                .addGap(15, 15, 15))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -405,10 +395,6 @@ public class Compras extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFechaActionPerformed
-
     private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalActionPerformed
@@ -426,35 +412,34 @@ public class Compras extends javax.swing.JFrame {
             return;
         }
 
-        String fec, tot, pro, aut;
+        String tot, pro, aut;
         String sSQL = "INSERT INTO compras(fecha, total, idProveedor, idAuto) VALUES(?,?,?,?)";
 
-        fec = txtFecha.getText();
+        java.util.Date fechaSeleccionada = txtFecha2.getDate();
+        
+        if(fechaSeleccionada == null){
+            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
+            return;
+        }
+        
+        Calendar maxFecha = Calendar.getInstance();
+        maxFecha.set(2026, Calendar.APRIL, 27);
+
+        if(fechaSeleccionada.after(maxFecha.getTime())){
+            JOptionPane.showMessageDialog(null, "No puedes seleccionar fechas después del 27/04/2026");
+            return;
+        }
+
+        java.sql.Date fec = new java.sql.Date(fechaSeleccionada.getTime());
+
         tot = txtTotal.getText();
         pro = extraerID(cboIdProveedor.getSelectedItem().toString());
-        aut = extraerID(cboIdAuto.getSelectedItem().toString());      
-
-        if(fec.length() < 4){
-            JOptionPane.showMessageDialog(null, "Fecha incompleta");
-            return;
-        }
-
-        int añoActual = java.time.Year.now().getValue();
-        int añoIngresado = Integer.parseInt(fec.substring(0,4));
-
-        if(añoIngresado > añoActual){
-            JOptionPane.showMessageDialog(null, "La fecha no puede ser mayor a la actual");
-            return;
-        }
-        if(fec.length() < 10){
-            JOptionPane.showMessageDialog(null, "Fecha incompleta");
-            return;
-        }
+        aut = extraerID(cboIdAuto.getSelectedItem().toString());
 
         try {
             PreparedStatement pst = cn.prepareStatement(sSQL);
 
-            pst.setDate(1, Date.valueOf(fec));
+            pst.setDate(1, fec);
             pst.setString(2, tot);
             pst.setString(3, pro);
             pst.setString(4, aut);
@@ -463,6 +448,7 @@ public class Compras extends javax.swing.JFrame {
 
             if(n > 0){
                 JOptionPane.showMessageDialog(null,"Datos guardados correctamente");
+                cargartabla(""); 
             }
 
         } catch (Exception e) {
@@ -478,12 +464,6 @@ public class Compras extends javax.swing.JFrame {
         String valor = txtBuscar.getText();
         cargartabla(valor);
     }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        inicio abrir = new inicio();
-        abrir.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         String valor = txtBuscar.getText();
@@ -510,7 +490,15 @@ public class Compras extends javax.swing.JFrame {
 
         String id = txtBuscar.getText();
 
-        String fec = txtFecha.getText();
+        java.util.Date fechaSeleccionada = txtFecha2.getDate();
+
+        if(fechaSeleccionada == null){
+            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
+            return;
+        }
+
+        java.sql.Date fechaSQL = new java.sql.Date(fechaSeleccionada.getTime());
+
         String tot = txtTotal.getText();
         String pro = extraerID(cboIdProveedor.getSelectedItem().toString()); 
         String aut = extraerID(cboIdAuto.getSelectedItem().toString());      
@@ -520,7 +508,7 @@ public class Compras extends javax.swing.JFrame {
         try {
             PreparedStatement pst = cn.prepareStatement(sql);
 
-            pst.setDate(1, Date.valueOf(fec));
+            pst.setDate(1, fechaSQL);
             pst.setString(2, tot);
             pst.setString(3, pro);
             pst.setString(4, aut);
@@ -580,6 +568,40 @@ public class Compras extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
+    private void cboIdProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboIdProveedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboIdProveedorActionPerformed
+
+    private void tablaCompraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCompraMouseClicked
+        habilitar();
+        int fila = tablaCompra.getSelectedRow();
+
+        if(fila >= 0){
+            txtBuscar.setText(tablaCompra.getValueAt(fila, 0).toString());
+
+            try {
+                // Fecha
+                String fechaTexto = tablaCompra.getValueAt(fila, 1).toString();
+                java.util.Date fecha = java.sql.Date.valueOf(fechaTexto);
+                txtFecha2.setDate(fecha);
+
+                // Total
+                txtTotal.setText(tablaCompra.getValueAt(fila, 2).toString());
+
+                // Proveedor
+                String idProveedor = tablaCompra.getValueAt(fila, 3).toString();
+                seleccionarCombo(cboIdProveedor, idProveedor);
+
+                // Auto
+                String idAuto = tablaCompra.getValueAt(fila, 4).toString();
+                seleccionarCombo(cboIdAuto, idAuto);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e);
+            }
+        }
+    }//GEN-LAST:event_tablaCompraMouseClicked
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -595,7 +617,6 @@ public class Compras extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton btnRegresar;
     private javax.swing.JButton btnReporte;
     private javax.swing.JComboBox<String> cboIdAuto;
     private javax.swing.JComboBox<String> cboIdProveedor;
@@ -610,7 +631,7 @@ public class Compras extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTable tablaCompra;
     private javax.swing.JTextField txtBuscar;
-    private javax.swing.JTextField txtFecha;
+    private com.toedter.calendar.JDateChooser txtFecha2;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
