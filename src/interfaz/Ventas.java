@@ -12,7 +12,11 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -30,7 +34,7 @@ public class Ventas extends javax.swing.JFrame {
         mostrarVentas();
         bloquearCampos();
         llenarCombo();
-        obtenerFecha(txtFecha);//fecha
+        obtenerFecha(txtFecha);
         txtFecha.setDateFormatString("yyyy-MM-dd");
         txtFecha.setMaxSelectableDate(new java.util.Date());
         ((JTextField) txtFecha.getDateEditor().getUiComponent()).setEditable(false);
@@ -45,8 +49,6 @@ public class Ventas extends javax.swing.JFrame {
     txtNombreCliente.setEditable(false);
     txtTelefonoCliente.setEditable(false);
 }
-    
-    //Fecha
     public String obtenerFecha(JDateChooser dateChooser) {
     if (dateChooser.getDate() == null) {
         return null;
@@ -61,12 +63,13 @@ public class Ventas extends javax.swing.JFrame {
             conexion cc = new conexion();
             Connection cn = cc.getConexion();
             
-       
+            // Llenar Clientes
             cmbCliente.removeAllItems();
             cmbCliente.addItem("Seleccione un cliente");
             ResultSet rsC = cn.createStatement().executeQuery("SELECT nombre FROM cliente");
             while (rsC.next()) cmbCliente.addItem(rsC.getString("nombre"));
 
+            // Llenar Autos disponibles
             cmbAuto.removeAllItems();
             cmbAuto.addItem("Seleccione un auto");
             ResultSet rsA = cn.createStatement().executeQuery("SELECT CONCAT(marca, ' ', modelo) AS vehiculo FROM autos WHERE estado != 'vendido'");
@@ -170,6 +173,7 @@ public class Ventas extends javax.swing.JFrame {
         cmbCliente = new javax.swing.JComboBox<>();
         cmbAuto = new javax.swing.JComboBox<>();
         txtFecha = new com.toedter.calendar.JDateChooser();
+        btnGenerarPDF = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -242,71 +246,75 @@ public class Ventas extends javax.swing.JFrame {
         cmbAuto.addItemListener(this::cmbAutoItemStateChanged);
         cmbAuto.addActionListener(this::cmbAutoActionPerformed);
 
+        btnGenerarPDF.setText("GENERAR REPORTE PDF");
+        btnGenerarPDF.addActionListener(this::btnGenerarPDFActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(113, 113, 113)
+                .addComponent(btnLimpiar)
+                .addGap(118, 118, 118)
+                .addComponent(jButton2)
+                .addGap(86, 86, 86)
+                .addComponent(btnGenerarPDF)
+                .addGap(70, 70, 70))
+            .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtModelo, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                            .addComponent(cmbAuto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbCliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(32, 32, 32)
-                                .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtModelo, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                    .addComponent(cmbAuto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbCliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(36, 36, 36)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel6)
+                                        .addGap(32, 32, 32)
+                                        .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtIdEmpleado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)))
-                .addGap(0, 94, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtIdEmpleado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)))
+                        .addGap(0, 94, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(120, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(113, 113, 113)
-                        .addComponent(btnLimpiar)
-                        .addGap(191, 191, 191)))
-                .addComponent(jButton2)
-                .addGap(158, 158, 158))
+                        .addContainerGap(762, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,7 +358,8 @@ public class Ventas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLimpiar)
                     .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(btnGenerarPDF))
                 .addGap(37, 37, 37)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
@@ -371,7 +380,7 @@ public class Ventas extends javax.swing.JFrame {
         conexion cc = new conexion();
         Connection cn = cc.getConexion();
 
-        // id del Cliente
+        // 1. Obtener ID del Cliente
         PreparedStatement pstC = cn.prepareStatement("SELECT idCliente FROM cliente WHERE nombre = ?");
         pstC.setString(1, cmbCliente.getSelectedItem().toString());
         ResultSet rsC = pstC.executeQuery();
@@ -382,7 +391,7 @@ public class Ventas extends javax.swing.JFrame {
         }
         int idCliente = rsC.getInt("idCliente");
 
-        // id auto
+        // 2. Obtener ID del Auto
         PreparedStatement pstA = cn.prepareStatement("SELECT idAuto FROM autos WHERE CONCAT(marca, ' ', modelo) = ?");
         pstA.setString(1, cmbAuto.getSelectedItem().toString());
         ResultSet rsA = pstA.executeQuery();
@@ -393,12 +402,12 @@ public class Ventas extends javax.swing.JFrame {
         }
         int idAuto = rsA.getInt("idAuto");
 
-        // venta a azure
+        // 3. Insertar la Venta en el Historial de Azure
         PreparedStatement pstVenta = cn.prepareStatement(
             "INSERT INTO ventas (fecha, totaldelaventa, idEmpleado, idCliente, idAuto, tipPag) VALUES (?,?,?,?,?,?)"
         );
 
-       
+        // Convertir fecha de JDateChooser a SQL Date
         java.sql.Date fecha = new java.sql.Date(txtFecha.getDate().getTime());
 
         pstVenta.setDate(1, fecha);
@@ -410,30 +419,30 @@ public class Ventas extends javax.swing.JFrame {
 
         pstVenta.executeUpdate();
 
-        // eliminar
+        // 4. ELIMINAR EL AUTO (Como pediste, desaparece de la tabla de autos)
         PreparedStatement pstDelete = cn.prepareStatement("DELETE FROM autos WHERE idAuto = ?");
         pstDelete.setInt(1, idAuto);
         pstDelete.executeUpdate();
 
         JOptionPane.showMessageDialog(null, "Venta registrada con éxito y auto eliminado del inventario");
 
-        // Llimpiar
+        // Limpieza de objetos de conexión
         pstC.close();
         pstA.close();
         pstVenta.close();
         pstDelete.close();
         
-       
-        llenarCombo();    
-        mostrarVentas();  
+        // Actualizar la interfaz
+        llenarCombo();    // Para que el auto ya no salga en la lista
+        mostrarVentas();  // Para ver la nueva venta reflejada
         limpiarCampos();
 
-        cn.close(); // 
+        cn.close(); // Cerramos conexión principal
 
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(null, "Error: Asegúrate de que el Total y el ID de Empleado sean números");
     } catch (SQLException e) {
-        
+        // Si sale error de Foreign Key, es porque la base de datos protege el historial
         JOptionPane.showMessageDialog(null, "Error SQL en Azure: " + e.getMessage());
     } catch (NullPointerException e) {
         JOptionPane.showMessageDialog(null, "Error: Selecciona una fecha válida");
@@ -494,7 +503,7 @@ public class Ventas extends javax.swing.JFrame {
         
         String nombreSeleccionado = cmbCliente.getSelectedItem().toString();
 
-       
+        // Si selecciona el mensaje de ayuda, limpiamos los campos
         if (nombreSeleccionado.equals("Seleccione un cliente")) {
             txtNombreCliente.setText("");
             txtTelefonoCliente.setText("");
@@ -505,7 +514,7 @@ public class Ventas extends javax.swing.JFrame {
             conexion cc = new conexion();
             Connection cn = cc.getConexion();
 
-            
+            // Buscamos por el NOMBRE que viene del ComboBox
             PreparedStatement pst = cn.prepareStatement(
                 "SELECT nombre, telefono FROM cliente WHERE nombre = ?"
             );
@@ -515,7 +524,7 @@ public class Ventas extends javax.swing.JFrame {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-             
+                // Rellenamos los campos con la info de la base
                 txtNombreCliente.setText(rs.getString("nombre"));
                 txtTelefonoCliente.setText(rs.getString("telefono"));
             } else {
@@ -523,7 +532,7 @@ public class Ventas extends javax.swing.JFrame {
                 txtTelefonoCliente.setText("");
             }
             
-            cn.close(); 
+            cn.close(); // Cerramos conexión
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener datos del cliente: " + e);
@@ -599,6 +608,88 @@ public class Ventas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbAutoActionPerformed
 
+    private void btnGenerarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarPDFActionPerformed
+     com.itextpdf.text.Document documento = new com.itextpdf.text.Document(com.itextpdf.text.PageSize.A4);
+    
+    // Generamos un nombre único para que no marque error si ya tienes uno abierto
+    String idUnico = String.valueOf(System.currentTimeMillis());
+    String rutaSegura = System.getProperty("java.io.tmpdir") + "Factura_Venta_" + idUnico + ".pdf";
+
+    try {
+        com.itextpdf.text.pdf.PdfWriter.getInstance(documento, new java.io.FileOutputStream(rutaSegura));
+        documento.open();
+
+        // 1. ENCABEZADO E INSTITUCIONAL
+        com.itextpdf.text.BaseColor azulInstitucional = new com.itextpdf.text.BaseColor(0, 51, 102);
+        com.itextpdf.text.Font fuenteTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 22, com.itextpdf.text.Font.BOLD, azulInstitucional);
+        
+        com.itextpdf.text.Paragraph titulo = new com.itextpdf.text.Paragraph("COMPROBANTE DE VENTA OFICIAL\n\n", fuenteTitulo);
+        titulo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        documento.add(titulo);
+
+        // 2. DATOS DE CLIENTE Y VENDEDOR (Usando tus variables reales)
+        com.itextpdf.text.Font fuenteLabel = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 11, com.itextpdf.text.Font.BOLD);
+        String fechaActual = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date());
+        
+        // Adaptado a tus JTextFields actuales
+        String nombreCliente = cmbCliente.getSelectedItem().toString(); 
+        String nombreEmpleado = txtIdEmpleado.getText(); 
+        
+        documento.add(new com.itextpdf.text.Paragraph("Fecha de Emisión: " + fechaActual, fuenteLabel));
+        documento.add(new com.itextpdf.text.Paragraph("Cliente: " + nombreCliente, fuenteLabel));
+        documento.add(new com.itextpdf.text.Paragraph("Atendido por ID Empleado: " + nombreEmpleado, fuenteLabel));
+        documento.add(new com.itextpdf.text.Paragraph("______________________________________________________________________________\n\n"));
+
+        // 3. TABLA DE DETALLES DEL AUTO SELECCIONADO
+        com.itextpdf.text.pdf.PdfPTable tablaPDF = new com.itextpdf.text.pdf.PdfPTable(2); 
+        tablaPDF.setWidthPercentage(100);
+        
+        com.itextpdf.text.Font fuenteEncabezado = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 12, com.itextpdf.text.Font.BOLD, com.itextpdf.text.BaseColor.WHITE);
+
+        // Encabezados de la tabla
+        String[] encabezados = {"Concepto", "Información del Vehículo"};
+        for (String h : encabezados) {
+            com.itextpdf.text.pdf.PdfPCell celda = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h, fuenteEncabezado));
+            celda.setBackgroundColor(azulInstitucional);
+            celda.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            celda.setPadding(8);
+            tablaPDF.addCell(celda);
+        }
+
+        // Llenado con los datos que aparecen en tus cuadros de texto
+        tablaPDF.addCell("Marca:");
+        tablaPDF.addCell(txtMarca.getText());
+        tablaPDF.addCell("Modelo:");
+        tablaPDF.addCell(txtModelo.getText());
+        tablaPDF.addCell("Estado:");
+        tablaPDF.addCell(txtEstado.getText());
+        tablaPDF.addCell("Precio Base:");
+        tablaPDF.addCell("$" + txtPrecio.getText());
+        tablaPDF.addCell("TOTAL FINAL:");
+        tablaPDF.addCell("$" + txtTotal.getText());
+
+        documento.add(tablaPDF);
+
+        // 4. NOTA ESPECIAL SI ES USADO
+        if (txtEstado.getText().equalsIgnoreCase("usado")) {
+            documento.add(new com.itextpdf.text.Paragraph("\n* Nota: Este vehículo cuenta con un descuento automático del 10% aplicado por ser unidad usada."));
+        }
+
+        // 5. CIERRE
+        documento.add(new com.itextpdf.text.Paragraph("\n\n__________________________"));
+        documento.add(new com.itextpdf.text.Paragraph("Firma de Conformidad"));
+        
+        documento.close();
+
+        // Abrir automáticamente
+        java.io.File archivo = new java.io.File(rutaSegura);
+        java.awt.Desktop.getDesktop().open(archivo);
+
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(null, "Error al generar reporte: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnGenerarPDFActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -625,6 +716,7 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGenerarPDF;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JComboBox<String> cmbAuto;
     private javax.swing.JComboBox<String> cmbCliente;

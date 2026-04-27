@@ -58,32 +58,37 @@ void habilitar(){
  
  String [] titulos = {"Id", "Nombre", "Apellido Pat", "Apellido Mat", "Telefono"};
  String [] datosfila = new String [5];
+
  DefaultTableModel tabla = new DefaultTableModel(titulos, 0){
     @Override
     public boolean isCellEditable(int row, int column){
         return false;
     }
-};
+ };
+
  tablaCliente.setModel(tabla);
- 
+
+
+ tablaCliente.getTableHeader().setResizingAllowed(false); // no cambiar ancho
+ tablaCliente.getTableHeader().setReorderingAllowed(false); // no mover columnas
+
  String sql = "SELECT * FROM cliente";
-     try {
-         Statement st = cn.createStatement();
-         ResultSet rs = st.executeQuery(sql);
-         while(rs.next()){
+ try {
+     Statement st = cn.createStatement();
+     ResultSet rs = st.executeQuery(sql);
+     while(rs.next()){
          datosfila[0] = rs.getString("idCliente");
          datosfila[1] = rs.getString("nombre");
          datosfila[2] = rs.getString("apPat");
          datosfila[3] = rs.getString("apMat");
          datosfila[4] = rs.getString("telefono");
-         
+
          tabla.addRow(datosfila);
-         }
-     } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, e);
      }
- 
+ } catch (Exception e) {
+     JOptionPane.showMessageDialog(null, e);
  }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
