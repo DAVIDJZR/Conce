@@ -47,6 +47,8 @@ public class inicio extends javax.swing.JFrame {
         panelRedondeado11 = new interfaz.PanelRedondeado();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        panelRedondeado12 = new interfaz.PanelRedondeado();
+        jLabel9 = new javax.swing.JLabel();
 
         jLabel17.setText("jLabel17");
 
@@ -110,7 +112,7 @@ public class inicio extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Proveedores");
+        jLabel6.setText("Empleados");
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -118,7 +120,7 @@ public class inicio extends javax.swing.JFrame {
         });
         panelRedondeado8.add(jLabel6, java.awt.BorderLayout.CENTER);
 
-        jPanel2.add(panelRedondeado8, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 140, 20));
+        jPanel2.add(panelRedondeado8, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 200, 140, 20));
 
         panelRedondeado9.setBackground(new java.awt.Color(153, 204, 255));
         panelRedondeado9.setLayout(new java.awt.BorderLayout());
@@ -160,6 +162,22 @@ public class inicio extends javax.swing.JFrame {
         });
         jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 250, -1, -1));
 
+        panelRedondeado12.setBackground(new java.awt.Color(153, 204, 255));
+        panelRedondeado12.setLayout(new java.awt.BorderLayout());
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Proveedores");
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel9MouseClicked(evt);
+            }
+        });
+        panelRedondeado12.add(jLabel9, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(panelRedondeado12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, 140, 20));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -191,6 +209,8 @@ public class inicio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
         Ventas VentanaNueva = new Ventas();
@@ -225,7 +245,7 @@ public class inicio extends javax.swing.JFrame {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
-        Proveedores VentanaNueva = new Proveedores ();
+        Empleados VentanaNueva = new Empleados ();
         VentanaNueva.setLocationRelativeTo(null);
         VentanaNueva.setVisible(true);
         this.dispose();
@@ -251,6 +271,14 @@ public class inicio extends javax.swing.JFrame {
     }
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+        // TODO add your handling code here:
+        Proveedores VentanaNueva = new Proveedores();
+        VentanaNueva.setLocationRelativeTo(null);
+        VentanaNueva.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel9MouseClicked
 
     /**
      * @param args the command line arguments
@@ -299,10 +327,12 @@ public class inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private interfaz.PanelRedondeado panelRedondeado10;
     private interfaz.PanelRedondeado panelRedondeado11;
+    private interfaz.PanelRedondeado panelRedondeado12;
     private interfaz.PanelRedondeado panelRedondeado6;
     private interfaz.PanelRedondeado panelRedondeado7;
     private interfaz.PanelRedondeado panelRedondeado8;
