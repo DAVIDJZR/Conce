@@ -17,6 +17,13 @@ public class Proveedores extends javax.swing.JFrame {
     initComponents();
     this.setLocationRelativeTo(null);
     mostrarDatos();
+    btnCancelar.setEnabled(false);
+    txtEmpresa.setEnabled(false);
+    txtTelefono.setEnabled(false);
+
+    btnModificar.setEnabled(false);
+    btnBorrar.setEnabled(false);
+    btnGuardarCambios.setEnabled(false);
 
     
     txtEmpresa.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -40,7 +47,12 @@ public class Proveedores extends javax.swing.JFrame {
 
     
 public void mostrarDatos() {
-    DefaultTableModel modelo = new DefaultTableModel();
+   DefaultTableModel modelo = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; 
+        }
+    };
         modelo.addColumn("ID");
         modelo.addColumn("Empresa");
         modelo.addColumn("Teléfono");
@@ -84,6 +96,11 @@ public void mostrarDatos() {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProveedores = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnGuardarCambios = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,6 +128,14 @@ public void mostrarDatos() {
                 "ID", "Empresa", "Teléfono"
             }
         ));
+        tblProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProveedoresMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tblProveedoresMousePressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblProveedores);
 
         jButton1.setText("Inicio");
@@ -120,44 +145,81 @@ public void mostrarDatos() {
             }
         });
 
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnGuardarCambios.setText("Guardar Cambios");
+        btnGuardarCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarCambiosActionPerformed(evt);
+            }
+        });
+
+        btnBorrar.setText("Borrar");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
+
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(jLabel2)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(172, 172, 172)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(124, 124, 124))))
+                .addComponent(jLabel3)
+                .addGap(309, 309, 309))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(231, 231, 231)
-                        .addComponent(btnGuardar)))
-                .addGap(0, 114, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(118, 118, 118)
+                        .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(200, 200, 200)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(232, 232, 232)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(284, 284, 284)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(110, 110, 110)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(413, 413, 413)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnGuardar)
+                        .addGap(65, 65, 65)
+                        .addComponent(btnNuevo)
+                        .addGap(62, 62, 62)
+                        .addComponent(btnCancelar)
+                        .addGap(44, 44, 44)
+                        .addComponent(btnModificar)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnGuardarCambios)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnBorrar)))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,46 +231,63 @@ public void mostrarDatos() {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnGuardar)
-                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnGuardar)
+                            .addComponent(btnModificar)
+                            .addComponent(btnGuardarCambios)
+                            .addComponent(btnBorrar)
+                            .addComponent(btnNuevo)
+                            .addComponent(btnCancelar)))
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(16, 16, 16))
+                .addGap(17, 17, 17))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-      try {
+      // Validación de campos vacíos
+    if (txtEmpresa.getText().trim().isEmpty() || txtTelefono.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Error: Los campos no pueden estar vacíos.");
+        return;
+    }
+
+    try {
         conexion cc = new conexion();
         Connection cn = cc.getConexion();
+        
+   
         String sql = "INSERT INTO proveedores (nombre_empresa, telefono) VALUES (?, ?)";
         
         PreparedStatement pst = cn.prepareStatement(sql);
-        
-    
         pst.setString(1, txtEmpresa.getText().trim());
         pst.setString(2, txtTelefono.getText().trim());
         
-        pst.executeUpdate();
+        int n = pst.executeUpdate();
         
-      
-        txtEmpresa.setText("");
-        txtTelefono.setText("");
-        JOptionPane.showMessageDialog(null, "¡Proveedor registrado con éxito!");
+        if (n > 0) {
+            JOptionPane.showMessageDialog(null, "¡Proveedor registrado con éxito!");
+                mostrarDatos();
+            txtEmpresa.setText("");
+            txtTelefono.setText("");
+            
+        }
         
+        cn.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error SQL: " + e.getMessage());
     } catch (Exception e) {
-        // Usamos getMessage para ver el error real si algo falla
-        JOptionPane.showMessageDialog(null, " Error al registrar: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
     }
-    
-    mostrarDatos(); 
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -217,6 +296,150 @@ public void mostrarDatos() {
         VentanaNueva.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+       // Desbloqueamos los campos para escribir
+    txtEmpresa.setEnabled(true);
+    txtTelefono.setEnabled(true);
+
+    btnGuardarCambios.setEnabled(true);
+
+    txtEmpresa.requestFocus();
+    btnCancelar.setEnabled(true);
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
+        // TODO add your handling code here:
+        int fila = tblProveedores.getSelectedRow();
+    if (fila < 0) {
+        JOptionPane.showMessageDialog(null, "Primero seleccione un proveedor de la tabla");
+        return;
+    }
+
+    String id = tblProveedores.getValueAt(fila, 0).toString();
+    
+    try {
+        conexion cc = new conexion();
+        Connection cn = cc.getConexion();
+        String sql = "UPDATE proveedores SET nombre_empresa=?, telefono=? WHERE idProveedor=?";
+        
+        PreparedStatement pst = cn.prepareStatement(sql);
+        pst.setString(1, txtEmpresa.getText().trim());
+        pst.setString(2, txtTelefono.getText().trim());
+        pst.setString(3, id);
+        
+        pst.executeUpdate();
+        mostrarDatos();
+        limpiarCampos();
+        JOptionPane.showMessageDialog(null, "Registro actualizado correctamente");
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al actualizar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnGuardarCambiosActionPerformed
+
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        // TODO add your handling code here:
+        int fila = tblProveedores.getSelectedRow();
+    if (fila < 0) {
+        JOptionPane.showMessageDialog(null, "Seleccione el registro que desea eliminar");
+        return;
+    }
+
+    int confirmar = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar este proveedor?");
+    
+    if (confirmar == JOptionPane.YES_OPTION) {
+        String id = tblProveedores.getValueAt(fila, 0).toString();
+        
+        try {
+            conexion cc = new conexion();
+            Connection cn = cc.getConexion();
+            String sql = "DELETE FROM proveedores WHERE idProveedor=?";
+            
+            PreparedStatement pst = cn.prepareStatement(sql);
+            pst.setString(1, id);
+            
+            pst.executeUpdate();
+            mostrarDatos(); // Refrescar tabla
+            limpiarCampos();
+            JOptionPane.showMessageDialog(null, "Proveedor eliminado");
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar: " + e.getMessage());
+        }
+    }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+       
+    txtEmpresa.setText("");
+    txtTelefono.setText("");
+    tblProveedores.clearSelection();
+    
+   
+    btnGuardar.setEnabled(true);         
+    btnModificar.setEnabled(false);      
+    btnBorrar.setEnabled(false);
+    btnGuardarCambios.setEnabled(false);
+    btnCancelar.setEnabled(true);
+      
+    txtEmpresa.requestFocus();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void tblProveedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProveedoresMouseClicked
+
+    int fila = tblProveedores.getSelectedRow();
+    
+    if (fila >= 0) {
+
+        txtEmpresa.setText(tblProveedores.getValueAt(fila, 1).toString());
+        txtTelefono.setText(tblProveedores.getValueAt(fila, 2).toString());
+
+        btnModificar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnGuardarCambios.setEnabled(true);
+
+        btnGuardar.setEnabled(false);
+    }
+    }//GEN-LAST:event_tblProveedoresMouseClicked
+
+    private void tblProveedoresMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProveedoresMousePressed
+        int fila = tblProveedores.getSelectedRow();
+    if (fila >= 0) {
+        txtEmpresa.setText(tblProveedores.getValueAt(fila, 1).toString());
+        txtTelefono.setText(tblProveedores.getValueAt(fila, 2).toString());
+
+        // Bloqueamos textos y el botón de guardar cambios
+        txtEmpresa.setEnabled(false);
+        txtTelefono.setEnabled(false);
+        btnGuardarCambios.setEnabled(false); // <--- ESTE SE QUEDA APAGADO
+
+        btnModificar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblProveedoresMousePressed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+
+    txtEmpresa.setText("");
+    txtTelefono.setText("");
+    txtEmpresa.setEnabled(false);
+    txtTelefono.setEnabled(false);
+
+    tblProveedores.clearSelection();
+
+    btnGuardar.setEnabled(true); 
+    btnModificar.setEnabled(false);
+    btnBorrar.setEnabled(false);
+    btnGuardarCambios.setEnabled(false);
+
+    btnCancelar.setEnabled(false);
+
+    System.out.println("Acción cancelada y formulario reseteado.");
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,11 +475,20 @@ public void mostrarDatos() {
                 new Proveedores().setVisible(true);
             }
         });
-        
-    
+
     }
+    private void limpiarCampos() {
+    txtEmpresa.setText("");
+    txtTelefono.setText("");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnGuardarCambios;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

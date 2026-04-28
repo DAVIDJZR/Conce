@@ -32,8 +32,10 @@ public class Ventas extends javax.swing.JFrame {
         llenarCombo();
         obtenerFecha(txtFecha);
         txtFecha.setDateFormatString("yyyy-MM-dd");
-        txtFecha.setMaxSelectableDate(new java.util.Date());
-        ((JTextField) txtFecha.getDateEditor().getUiComponent()).setEditable(false);
+    txtFecha.setMinSelectableDate(new java.util.Date());
+    txtFecha.setMaxSelectableDate(new java.util.Date());
+    ((JTextField) txtFecha.getDateEditor().getUiComponent()).setEditable(false);
+    txtFecha.setDate(new java.util.Date());
           
     }
     int idVentaSeleccionada = -1;
@@ -48,12 +50,11 @@ public class Ventas extends javax.swing.JFrame {
     txtTelefonoCliente.setEditable(false);
 }
     public String obtenerFecha(JDateChooser dateChooser) {
-    if (dateChooser.getDate() == null) {
-        return null;
-    }
+    java.util.Date hoy = new java.util.Date();
+    dateChooser.setDate(hoy); // siempre pone la fecha actual
 
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-    return formato.format(dateChooser.getDate());
+    return formato.format(hoy);
 }
     
 private void llenarCombo() {
@@ -770,85 +771,90 @@ try {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnGenerarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarPDFActionPerformed
-        com.itextpdf.text.Document documento = new com.itextpdf.text.Document(com.itextpdf.text.PageSize.A4);
+ 
+    com.itextpdf.text.Document documento = new com.itextpdf.text.Document(com.itextpdf.text.PageSize.A4);
+    String idUnico = String.valueOf(System.currentTimeMillis());
+    
+    String ruta = System.getProperty("user.home") + java.io.File.separator + "Factura_Venta_" + idUnico + ".pdf";
+    try {
+        java.io.FileOutputStream archivoSalida = new java.io.FileOutputStream(ruta);
+        com.itextpdf.text.pdf.PdfWriter.getInstance(documento, archivoSalida);
+        documento.open();
 
        
-        String idUnico = String.valueOf(System.currentTimeMillis());
-        String rutaSegura = System.getProperty("java.io.tmpdir") + "Factura_Venta_" + idUnico + ".pdf";
+        com.itextpdf.text.BaseColor azulIPN = new com.itextpdf.text.BaseColor(0, 51, 102);
+        com.itextpdf.text.Font fuenteTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 20, com.itextpdf.text.Font.BOLD, azulIPN);
+        com.itextpdf.text.Font fuenteNegrita = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 11, com.itextpdf.text.Font.BOLD);
 
-        try {
-            com.itextpdf.text.pdf.PdfWriter.getInstance(documento, new java.io.FileOutputStream(rutaSegura));
-            documento.open();
+        com.itextpdf.text.Paragraph titulo = new com.itextpdf.text.Paragraph("CONCESIONARIA - COMPROBANTE DE VENTA\n\n", fuenteTitulo);
+        titulo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        documento.add(titulo);
 
-            
-            com.itextpdf.text.BaseColor azulInstitucional = new com.itextpdf.text.BaseColor(0, 51, 102);
-            com.itextpdf.text.Font fuenteTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 22, com.itextpdf.text.Font.BOLD, azulInstitucional);
-
-            com.itextpdf.text.Paragraph titulo = new com.itextpdf.text.Paragraph("COMPROBANTE DE VENTA OFICIAL\n\n", fuenteTitulo);
-            titulo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-            documento.add(titulo);
-
-           
-            com.itextpdf.text.Font fuenteLabel = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 11, com.itextpdf.text.Font.BOLD);
-            String fechaActual = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date());
-
-          
-            String nombreCliente = cmbCliente.getSelectedItem().toString();
-            String nombreEmpleado = cmbEmpleado.getSelectedItem().toString();
-
-            documento.add(new com.itextpdf.text.Paragraph("Fecha de Emisión: " + fechaActual, fuenteLabel));
-            documento.add(new com.itextpdf.text.Paragraph("Cliente: " + nombreCliente, fuenteLabel));
-            documento.add(new com.itextpdf.text.Paragraph("Atendido por ID Empleado: " + nombreEmpleado, fuenteLabel));
-            documento.add(new com.itextpdf.text.Paragraph("______________________________________________________________________________\n\n"));
-
-            
-            com.itextpdf.text.pdf.PdfPTable tablaPDF = new com.itextpdf.text.pdf.PdfPTable(2);
-            tablaPDF.setWidthPercentage(100);
-
-            com.itextpdf.text.Font fuenteEncabezado = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 12, com.itextpdf.text.Font.BOLD, com.itextpdf.text.BaseColor.WHITE);
-
-            
-            String[] encabezados = {"Concepto", "Información del Vehículo"};
-            for (String h : encabezados) {
-                com.itextpdf.text.pdf.PdfPCell celda = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h, fuenteEncabezado));
-                celda.setBackgroundColor(azulInstitucional);
-                celda.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-                celda.setPadding(8);
-                tablaPDF.addCell(celda);
-            }
-
-            
-            tablaPDF.addCell("Marca:");
-            tablaPDF.addCell(txtMarca.getText());
-            tablaPDF.addCell("Modelo:");
-            tablaPDF.addCell(txtModelo.getText());
-            tablaPDF.addCell("Estado:");
-            tablaPDF.addCell(txtEstado.getText());
-            tablaPDF.addCell("Precio Base:");
-            tablaPDF.addCell("$" + txtPrecio.getText());
-            tablaPDF.addCell("TOTAL FINAL:");
-            tablaPDF.addCell("$" + txtTotal.getText());
-
-            documento.add(tablaPDF);
-
-           
-            if (txtEstado.getText().equalsIgnoreCase("usado")) {
-                documento.add(new com.itextpdf.text.Paragraph("\n* Nota: Este vehículo cuenta con un descuento automático del 10% aplicado por ser unidad usada."));
-            }
-
-           
-            documento.add(new com.itextpdf.text.Paragraph("\n\n__________________________"));
-            documento.add(new com.itextpdf.text.Paragraph("Firma de Conformidad"));
-
-            documento.close();
-
-          
-            java.io.File archivo = new java.io.File(rutaSegura);
-            java.awt.Desktop.getDesktop().open(archivo);
-
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(null, "Error al generar reporte: " + e.getMessage());
+       
+        String fechaStr = "";
+        if (txtFecha.getDate() != null) {
+            fechaStr = new java.text.SimpleDateFormat("dd/MM/yyyy").format(txtFecha.getDate());
         }
+
+        documento.add(new com.itextpdf.text.Paragraph("Fecha de Venta: " + fechaStr));
+        documento.add(new com.itextpdf.text.Paragraph("Cliente: " + cmbCliente.getSelectedItem().toString(), fuenteNegrita));
+        documento.add(new com.itextpdf.text.Paragraph("Empleado: " + cmbEmpleado.getSelectedItem().toString()));
+        documento.add(new com.itextpdf.text.Paragraph("Método de Pago: " + cmbMetododepago.getSelectedItem().toString()));
+        documento.add(new com.itextpdf.text.Paragraph("Estado de Pago: " + cmbEstadodepago.getSelectedItem().toString()));
+        documento.add(new com.itextpdf.text.Paragraph("______________________________________________________________________________\n\n"));
+
+       
+        com.itextpdf.text.pdf.PdfPTable tabla = new com.itextpdf.text.pdf.PdfPTable(2);
+        tabla.setWidthPercentage(100);
+
+        
+        com.itextpdf.text.pdf.PdfPCell h1 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Descripción", fuenteNegrita));
+        com.itextpdf.text.pdf.PdfPCell h2 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Valor", fuenteNegrita));
+        h1.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+        h2.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+        tabla.addCell(h1);
+        tabla.addCell(h2);
+
+      
+        tabla.addCell("Auto Seleccionado:");
+        tabla.addCell(cmbAuto.getSelectedItem().toString());
+        tabla.addCell("Marca:");
+        tabla.addCell(txtMarca.getText());
+        tabla.addCell("Modelo:");
+        tabla.addCell(txtModelo.getText());
+        tabla.addCell("Estado físico:");
+        tabla.addCell(txtEstado.getText());
+        tabla.addCell("Precio de Lista:");
+        tabla.addCell("$" + txtPrecio.getText());
+
+       
+        com.itextpdf.text.pdf.PdfPCell cellTotalLabel = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("TOTAL A PAGAR:", fuenteNegrita));
+        com.itextpdf.text.pdf.PdfPCell cellTotalValor = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("$" + txtTotal.getText(), fuenteNegrita));
+        cellTotalValor.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+        tabla.addCell(cellTotalLabel);
+        tabla.addCell(cellTotalValor);
+
+        documento.add(tabla);
+
+       
+        if (txtEstado.getText().equalsIgnoreCase("usado")) {
+            documento.add(new com.itextpdf.text.Paragraph("\n* Unidad seminueva sujeta a revisión mecánica."));
+        }
+        
+        documento.add(new com.itextpdf.text.Paragraph("\n\n\n\n__________________________\nFirma del Cliente"));
+
+      
+        documento.close();
+        archivoSalida.close();
+
+  
+        java.io.File file = new java.io.File(ruta);
+        java.awt.Desktop.getDesktop().open(file);
+
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + e.getMessage());
+    }       
+        
     }//GEN-LAST:event_btnGenerarPDFActionPerformed
 
     /**

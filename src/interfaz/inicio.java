@@ -46,7 +46,6 @@ public class inicio extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         panelRedondeado11 = new interfaz.PanelRedondeado();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         panelRedondeado12 = new interfaz.PanelRedondeado();
         jLabel9 = new javax.swing.JLabel();
 
@@ -154,14 +153,6 @@ public class inicio extends javax.swing.JFrame {
 
         jPanel2.add(panelRedondeado11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 140, 20));
 
-        jButton1.setText("conexion");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 250, -1, -1));
-
         panelRedondeado12.setBackground(new java.awt.Color(153, 204, 255));
         panelRedondeado12.setLayout(new java.awt.BorderLayout());
 
@@ -251,27 +242,6 @@ public class inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- 
-    conexion con = new conexion();
-    
-    // 2. Intentamos obtener la conexión
-    java.sql.Connection cn = con.getConexion();
-    
-    // 3. Verificamos si funcionó
-    if (cn != null) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Estamos dentro al fin.");
-        try {
-            cn.close(); // Siempre cerramos la conexión de prueba
-        } catch (java.sql.SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(null, "Error:");
-    }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
         // TODO add your handling code here:
         Proveedores VentanaNueva = new Proveedores();
@@ -317,7 +287,6 @@ public class inicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
