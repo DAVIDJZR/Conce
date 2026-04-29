@@ -33,9 +33,6 @@ public class Compras extends javax.swing.JFrame {
                 }
             }
         };
-        
-        
-
         txtTotal.addKeyListener(soloNumeros);
         txtBuscar.addKeyListener(soloNumeros);
         
@@ -71,6 +68,7 @@ public class Compras extends javax.swing.JFrame {
         btnCancelar.setEnabled(false);
         btnEditar.setEnabled(false);
         btnEliminar.setEnabled(false);
+        btnCambios.setEnabled(false);
     }
      
     private void habilitar(){
@@ -150,24 +148,45 @@ public class Compras extends javax.swing.JFrame {
     }
 
     private void cargarAutos() {
-        conexion mysql = new conexion();
-        Connection cn = mysql.getConexion();
+    conexion mysql = new conexion();
+    Connection cn = mysql.getConexion();
+    try {
+        Statement st = cn.createStatement();
 
-        try {
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT idAuto, marca, modelo FROM autos");
+        ResultSet rs = st.executeQuery("SELECT idAuto, marca, modelo, precio, stock FROM autos");
 
-            cboIdAuto.removeAllItems();
-
-            while(rs.next()){
-                String item = rs.getString("idAuto") + " - " + rs.getString("marca") + " " + rs.getString("modelo");
-                cboIdAuto.addItem(item);
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        cboIdAuto.removeAllItems();
+        while(rs.next()){
+ 
+            String item = rs.getString("idAuto") + " - " + rs.getString("marca") + " " + rs.getString("modelo") 
+                        + " - $" + rs.getString("precio") + " - Cant:" + rs.getString("stock");
+            cboIdAuto.addItem(item);
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error: " + e);
+    }    
+}
+    private void calcularTotal() {
+        try {
+
+        String item = cboIdAuto.getSelectedItem().toString();
+        
+        int inicioPrecio = item.indexOf("$") + 1;
+        int finPrecio = item.indexOf(" - Cant:");
+        String precioStr = item.substring(inicioPrecio, finPrecio);
+        double precio = Double.parseDouble(precioStr);
+
+        int inicioCant = item.indexOf("Cant:") + 5;
+        String cantStr = item.substring(inicioCant);
+        int cantidad = Integer.parseInt(cantStr);
+
+        txtTotal.setText(String.valueOf(precio * cantidad));
+
+    } catch (Exception e) {
+        txtTotal.setText("0.0");
     }
+    }
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -187,6 +206,7 @@ public class Compras extends javax.swing.JFrame {
         txtFecha2 = new com.toedter.calendar.JDateChooser();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        btnCambios = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCompra = new javax.swing.JTable();
@@ -208,6 +228,7 @@ public class Compras extends javax.swing.JFrame {
 
         jLabel4.setText("idAuto");
 
+        txtTotal.setEditable(false);
         txtTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTotalActionPerformed(evt);
@@ -243,6 +264,11 @@ public class Compras extends javax.swing.JFrame {
         });
 
         cboIdAuto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboIdAuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboIdAutoActionPerformed(evt);
+            }
+        });
 
         btnEditar.setText("Editar");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -258,6 +284,13 @@ public class Compras extends javax.swing.JFrame {
             }
         });
 
+        btnCambios.setText("Guaradar Cambios");
+        btnCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -266,37 +299,39 @@ public class Compras extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnNuevo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar)
+                        .addGap(42, 42, 42)
+                        .addComponent(btnCancelar)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnEliminar)
+                        .addGap(50, 50, 50)
+                        .addComponent(btnEditar)
+                        .addGap(62, 62, 62)
+                        .addComponent(btnCambios)
+                        .addGap(76, 76, 76))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtTotal, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(126, 126, 126)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtFecha2, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                            .addComponent(txtTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                             .addComponent(cboIdProveedor, 0, 413, Short.MAX_VALUE)
-                            .addComponent(cboIdAuto, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtFecha2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
-                        .addGap(97, 97, 97))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnNuevo)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnGuardar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEditar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEliminar)
+                            .addComponent(cboIdAuto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(txtFecha2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtFecha2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
@@ -304,9 +339,9 @@ public class Compras extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(cboIdProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboIdProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cboIdAuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
@@ -315,7 +350,8 @@ public class Compras extends javax.swing.JFrame {
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
                     .addComponent(btnEditar)
-                    .addComponent(btnEliminar))
+                    .addComponent(btnEliminar)
+                    .addComponent(btnCambios))
                 .addGap(26, 26, 26))
         );
 
@@ -335,6 +371,9 @@ public class Compras extends javax.swing.JFrame {
         tablaCompra.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaCompraMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tablaCompraMousePressed(evt);
             }
         });
         jScrollPane1.setViewportView(tablaCompra);
@@ -373,29 +412,29 @@ public class Compras extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(38, 38, 38)
-                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
-                                .addComponent(btnBuscar))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnReporte)
                                 .addGap(18, 18, 18)
-                                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 90, Short.MAX_VALUE)))
+                                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(34, 34, 34)
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(btnBuscar)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
                     .addComponent(btnBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReporte)
                     .addComponent(jToggleButton1))
@@ -413,8 +452,8 @@ public class Compras extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -436,8 +475,6 @@ public class Compras extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null,"No se conectó a la base de datos");
         return;
     }
-
-    // 1. Obtener la fecha (que ya sabemos que es la de hoy por tu configuración)
     java.util.Date fechaSeleccionada = txtFecha2.getDate();
     
     if(fechaSeleccionada == null){
@@ -447,14 +484,12 @@ public class Compras extends javax.swing.JFrame {
 
     java.sql.Date fec = new java.sql.Date(fechaSeleccionada.getTime());
 
-    // 2. Validar que el total no esté vacío
     if(txtTotal.getText().trim().isEmpty()){
         JOptionPane.showMessageDialog(null, "Por favor, ingresa el monto total de la compra");
         txtTotal.requestFocus();
         return;
     }
 
-    // 3. Extraer los datos de los ComboBox y el campo de texto
     String tot = txtTotal.getText().trim();
     String pro = extraerID(cboIdProveedor.getSelectedItem().toString());
     String aut = extraerID(cboIdAuto.getSelectedItem().toString());
@@ -508,48 +543,21 @@ public class Compras extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
+        cargartabla("");
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        conexion mysql = new conexion();
-        Connection cn = mysql.getConexion();
+        
+    txtTotal.setEnabled(true);
+    cboIdProveedor.setEnabled(true);
+    cboIdAuto.setEnabled(true);
+    txtTotal.requestFocus();
 
-        String id = txtBuscar.getText();
-
-        java.util.Date fechaSeleccionada = txtFecha2.getDate();
-
-        if(fechaSeleccionada == null){
-            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
-            return;
-        }
-
-        java.sql.Date fechaSQL = new java.sql.Date(fechaSeleccionada.getTime());
-
-        String tot = txtTotal.getText();
-        String pro = extraerID(cboIdProveedor.getSelectedItem().toString()); 
-        String aut = extraerID(cboIdAuto.getSelectedItem().toString());      
-
-        String sql = "UPDATE compras SET fecha=?, total=?, idProveedor=?, idAuto=? WHERE idCompra=?";
-
-        try {
-            PreparedStatement pst = cn.prepareStatement(sql);
-
-            pst.setDate(1, fechaSQL);
-            pst.setString(2, tot);
-            pst.setString(3, pro);
-            pst.setString(4, aut);
-            pst.setString(5, id);
-
-            int n = pst.executeUpdate();
-
-            if(n > 0){
-                JOptionPane.showMessageDialog(null,"Registro actualizado correctamente");
-                cargartabla("");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
+    
+    btnCambios.setEnabled(true); // 
+    btnEditar.setEnabled(false);        
+    btnEliminar.setEnabled(false);      
+    btnNuevo.setEnabled(false);
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
@@ -599,34 +607,148 @@ public class Compras extends javax.swing.JFrame {
     }//GEN-LAST:event_cboIdProveedorActionPerformed
 
     private void tablaCompraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCompraMouseClicked
-        habilitar();
+      int fila = tablaCompra.getSelectedRow();
+
+    if(fila >= 0){
+        txtTotal.setEnabled(false);
+        cboIdProveedor.setEnabled(false);
+        cboIdAuto.setEnabled(false);
+       
+        txtBuscar.setText(tablaCompra.getValueAt(fila, 0).toString());
+        
+        try {
+
+            String fechaTexto = tablaCompra.getValueAt(fila, 1).toString();
+            java.util.Date fecha = java.sql.Date.valueOf(fechaTexto);
+            txtFecha2.setDate(fecha);
+
+
+            txtTotal.setText(tablaCompra.getValueAt(fila, 2).toString());
+
+
+            String idProveedor = tablaCompra.getValueAt(fila, 3).toString();
+            seleccionarCombo(cboIdProveedor, idProveedor);
+
+            // Auto
+            String idAuto = tablaCompra.getValueAt(fila, 4).toString();
+            seleccionarCombo(cboIdAuto, idAuto);
+
+            btnEditar.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            btnGuardar.setEnabled(false);
+            btnCancelar.setEnabled(true);
+            btnNuevo.setEnabled(false);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e);
+        }
+    }
+      
+    }//GEN-LAST:event_tablaCompraMouseClicked
+
+    private void tablaCompraMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCompraMousePressed
         int fila = tablaCompra.getSelectedRow();
 
-        if(fila >= 0){
-            txtBuscar.setText(tablaCompra.getValueAt(fila, 0).toString());
+    if(fila >= 0){
+        
+        txtTotal.setEnabled(false);
+        cboIdProveedor.setEnabled(false);
+        cboIdAuto.setEnabled(false);
+       
+       
+        txtBuscar.setText(tablaCompra.getValueAt(fila, 0).toString());
+        
+        try {
 
+            String fechaTexto = tablaCompra.getValueAt(fila, 1).toString();
+            java.util.Date fecha = java.sql.Date.valueOf(fechaTexto);
+            txtFecha2.setDate(fecha);
+
+
+            txtTotal.setText(tablaCompra.getValueAt(fila, 2).toString());
+
+            String idProveedor = tablaCompra.getValueAt(fila, 3).toString();
+            seleccionarCombo(cboIdProveedor, idProveedor);
+
+            String idAuto = tablaCompra.getValueAt(fila, 4).toString();
+            seleccionarCombo(cboIdAuto, idAuto);
+
+
+            btnEditar.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            btnGuardar.setEnabled(false);
+            btnCancelar.setEnabled(true);
+            btnNuevo.setEnabled(true);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e);
+        }
+    }
+        
+    }//GEN-LAST:event_tablaCompraMousePressed
+
+    private void btnCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiosActionPerformed
+
+    if (txtTotal.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "El total no puede estar vacío");
+        return;
+    }
+
+    try {
+        conexion mysql = new conexion();
+        Connection cn = mysql.getConexion();
+        
+        String id = txtBuscar.getText();
+        java.sql.Date fechaSQL = new java.sql.Date(txtFecha2.getDate().getTime());
+        String pro = extraerID(cboIdProveedor.getSelectedItem().toString());
+        String aut = extraerID(cboIdAuto.getSelectedItem().toString());
+
+        String sql = "UPDATE compras SET fecha=?, total=?, idProveedor=?, idAuto=? WHERE idCompra=?";
+        PreparedStatement pst = cn.prepareStatement(sql);
+
+        pst.setDate(1, fechaSQL);
+        pst.setString(2, txtTotal.getText().trim());
+        pst.setString(3, pro);
+        pst.setString(4, aut);
+        pst.setString(5, id);
+
+        int n = pst.executeUpdate();
+
+        if (n > 0) {
+            JOptionPane.showMessageDialog(null, "¡Cambios guardados correctamente!");
+            cargartabla(""); 
+            estadoInicial();
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al actualizar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnCambiosActionPerformed
+
+    private void cboIdAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboIdAutoActionPerformed
+
+        if (txtTotal.isEnabled()) {
             try {
-                // Fecha
-                String fechaTexto = tablaCompra.getValueAt(fila, 1).toString();
-                java.util.Date fecha = java.sql.Date.valueOf(fechaTexto);
-                txtFecha2.setDate(fecha);
+                String item = cboIdAuto.getSelectedItem().toString();
 
-                // Total
-                txtTotal.setText(tablaCompra.getValueAt(fila, 2).toString());
+   
+                int posDolar = item.indexOf("$") + 1;
+                int posGuion = item.indexOf(" - Cant:");
+                double precio = Double.parseDouble(item.substring(posDolar, posGuion));
 
-                // Proveedor
-                String idProveedor = tablaCompra.getValueAt(fila, 3).toString();
-                seleccionarCombo(cboIdProveedor, idProveedor);
+ 
+                int posCant = item.indexOf("Cant:") + 5;
+                int stock = Integer.parseInt(item.substring(posCant));
 
-                // Auto
-                String idAuto = tablaCompra.getValueAt(fila, 4).toString();
-                seleccionarCombo(cboIdAuto, idAuto);
+   
+                double totalFinal = precio * stock;
+                txtTotal.setText(String.valueOf(totalFinal));
 
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e);
+                txtTotal.setText("0.0");
             }
         }
-    }//GEN-LAST:event_tablaCompraMouseClicked
+    }//GEN-LAST:event_cboIdAutoActionPerformed
 
     public static void main(String args[]) {
 
@@ -636,8 +758,33 @@ public class Compras extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void estadoInicial() {
+    inhabilitar(); // Bloquea todo y limpia
+    btnNuevo.setEnabled(true);
+    btnGuardar.setEnabled(false);
+    btnCancelar.setEnabled(false);
+    btnEditar.setEnabled(false);
+    btnCambios.setEnabled(false); 
+    btnEliminar.setEnabled(false);
+}
+    private void estadoEdicion() {
+    txtTotal.setEnabled(true);
+    cboIdProveedor.setEnabled(true);
+    cboIdAuto.setEnabled(true);
+    txtTotal.requestFocus();
+
+    btnNuevo.setEnabled(false);
+    btnGuardar.setEnabled(false);
+    btnCancelar.setEnabled(true);
+    btnEditar.setEnabled(false);
+    btnCambios.setEnabled(true); 
+    btnEliminar.setEnabled(false);
+}
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCambios;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;

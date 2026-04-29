@@ -1,4 +1,4 @@
 REPORTE DE COMPRAS
 
 Total de compras registradas: 1
-Monto total acumulado: $1.0
+Monto total acumulado: $79996.0
