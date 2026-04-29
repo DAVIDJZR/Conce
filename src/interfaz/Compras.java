@@ -1,23 +1,27 @@
 package interfaz;
 
+import com.toedter.calendar.JDateChooser;
 import conexion.conexion;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import javax.swing.JTextField;
 
 public class Compras extends javax.swing.JFrame {
     DefaultTableModel modelo;
 
     public Compras() {
         initComponents();
-        Calendar maxFecha = Calendar.getInstance();
-        maxFecha.set(2026, Calendar.APRIL, 27); // OJO: abril = Calendar.APRIL
-
-        txtFecha2.setMaxSelectableDate(maxFecha.getTime());
-
+        obtenerFecha(txtFecha2);
+        txtFecha2.setDateFormatString("yyyy-MM-dd");
+        txtFecha2.setMinSelectableDate(new java.util.Date());
+        txtFecha2.setMaxSelectableDate(new java.util.Date());
+        ((JTextField) txtFecha2.getDateEditor().getUiComponent()).setEditable(false);
+        txtFecha2.setDate(new java.util.Date());
         tablaCompra.setRowSelectionAllowed(true);
         cargartabla("");
         
@@ -29,6 +33,8 @@ public class Compras extends javax.swing.JFrame {
                 }
             }
         };
+        
+        
 
         txtTotal.addKeyListener(soloNumeros);
         txtBuscar.addKeyListener(soloNumeros);
@@ -38,6 +44,14 @@ public class Compras extends javax.swing.JFrame {
         
         inhabilitar();
     }
+    
+    public String obtenerFecha(JDateChooser dateChooser) {
+        java.util.Date hoy = new java.util.Date();
+        dateChooser.setDate(hoy); 
+
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        return formato.format(hoy);
+}
 
     
     private String extraerID(String itemCombo) {
@@ -49,9 +63,14 @@ public class Compras extends javax.swing.JFrame {
         txtTotal.setEnabled(false);
         cboIdProveedor.setEnabled(false);
         cboIdAuto.setEnabled(false);
-
+           
         txtFecha2.setDate(null);
         txtTotal.setText("");
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
     }
      
     private void habilitar(){
@@ -61,6 +80,12 @@ public class Compras extends javax.swing.JFrame {
         cboIdAuto.setEnabled(true);
 
         txtFecha2.setDate(null);
+        
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
     }
     
     private void seleccionarCombo(javax.swing.JComboBox<String> combo, String id){
@@ -404,56 +429,57 @@ public class Compras extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        conexion sql = new conexion();
-        Connection cn = sql.getConexion();
+    conexion sql = new conexion();
+    Connection cn = sql.getConexion();
 
-        if(cn == null){
-            JOptionPane.showMessageDialog(null,"No se conectó a la base de datos");
-            return;
+    if(cn == null){
+        JOptionPane.showMessageDialog(null,"No se conectó a la base de datos");
+        return;
+    }
+
+    // 1. Obtener la fecha (que ya sabemos que es la de hoy por tu configuración)
+    java.util.Date fechaSeleccionada = txtFecha2.getDate();
+    
+    if(fechaSeleccionada == null){
+        JOptionPane.showMessageDialog(null, "Error: La fecha no puede estar vacía");
+        return;
+    }
+
+    java.sql.Date fec = new java.sql.Date(fechaSeleccionada.getTime());
+
+    // 2. Validar que el total no esté vacío
+    if(txtTotal.getText().trim().isEmpty()){
+        JOptionPane.showMessageDialog(null, "Por favor, ingresa el monto total de la compra");
+        txtTotal.requestFocus();
+        return;
+    }
+
+    // 3. Extraer los datos de los ComboBox y el campo de texto
+    String tot = txtTotal.getText().trim();
+    String pro = extraerID(cboIdProveedor.getSelectedItem().toString());
+    String aut = extraerID(cboIdAuto.getSelectedItem().toString());
+
+    String sSQL = "INSERT INTO compras(fecha, total, idProveedor, idAuto) VALUES(?,?,?,?)";
+
+    try {
+        PreparedStatement pst = cn.prepareStatement(sSQL);
+
+        pst.setDate(1, fec);
+        pst.setString(2, tot);
+        pst.setString(3, pro);
+        pst.setString(4, aut);
+
+        int n = pst.executeUpdate();
+
+        if(n > 0){
+            JOptionPane.showMessageDialog(null, "Compra registrada exitosamente");
+            cargartabla(""); // Refresca la tabla para ver la nueva compra
+            inhabilitar();   // Limpia y bloquea los campos
         }
 
-        String tot, pro, aut;
-        String sSQL = "INSERT INTO compras(fecha, total, idProveedor, idAuto) VALUES(?,?,?,?)";
-
-        java.util.Date fechaSeleccionada = txtFecha2.getDate();
-        
-        if(fechaSeleccionada == null){
-            JOptionPane.showMessageDialog(null, "Selecciona una fecha");
-            return;
-        }
-        
-        Calendar maxFecha = Calendar.getInstance();
-        maxFecha.set(2026, Calendar.APRIL, 27);
-
-        if(fechaSeleccionada.after(maxFecha.getTime())){
-            JOptionPane.showMessageDialog(null, "No puedes seleccionar fechas después del 27/04/2026");
-            return;
-        }
-
-        java.sql.Date fec = new java.sql.Date(fechaSeleccionada.getTime());
-
-        tot = txtTotal.getText();
-        pro = extraerID(cboIdProveedor.getSelectedItem().toString());
-        aut = extraerID(cboIdAuto.getSelectedItem().toString());
-
-        try {
-            PreparedStatement pst = cn.prepareStatement(sSQL);
-
-            pst.setDate(1, fec);
-            pst.setString(2, tot);
-            pst.setString(3, pro);
-            pst.setString(4, aut);
-
-            int n = pst.executeUpdate();
-
-            if(n > 0){
-                JOptionPane.showMessageDialog(null,"Datos guardados correctamente");
-                cargartabla(""); 
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al guardar en la base de datos: " + e.getMessage());
+    } 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

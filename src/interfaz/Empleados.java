@@ -66,9 +66,26 @@ public class Empleados extends javax.swing.JFrame {
 
         jLabel4.setText("Salario");
 
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+
+        txtPuesto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPuestoKeyTyped(evt);
+            }
+        });
+
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTelefonoActionPerformed(evt);
+            }
+        });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
             }
         });
 
@@ -169,10 +186,6 @@ public class Empleados extends javax.swing.JFrame {
                         .addGap(204, 204, 204))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 65, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jframesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnInicio)
-                .addGap(337, 337, 337))
             .addGroup(jframesLayout.createSequentialGroup()
                 .addGroup(jframesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jframesLayout.createSequentialGroup()
@@ -209,18 +222,23 @@ public class Empleados extends javax.swing.JFrame {
                         .addComponent(btnBorrar)
                         .addGap(42, 42, 42)
                         .addComponent(btnCancelar)
-                        .addGap(38, 38, 38)
+                        .addGap(173, 173, 173)
                         .addComponent(btnModificar)
-                        .addGap(46, 46, 46)
-                        .addComponent(btnGuardar)
-                        .addGap(31, 31, 31)
-                        .addComponent(btnModi)))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModi))
+                    .addGroup(jframesLayout.createSequentialGroup()
+                        .addGap(370, 370, 370)
+                        .addComponent(btnGuardar)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jframesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnInicio)
+                .addGap(337, 337, 337))
         );
         jframesLayout.setVerticalGroup(
             jframesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jframesLayout.createSequentialGroup()
-                .addContainerGap(80, Short.MAX_VALUE)
+                .addContainerGap(59, Short.MAX_VALUE)
                 .addGroup(jframesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -235,10 +253,10 @@ public class Empleados extends javax.swing.JFrame {
                     .addComponent(btnBorrar)
                     .addComponent(btnCancelar)
                     .addComponent(btnModificar)
-                    .addComponent(btnGuardar)
                     .addComponent(btnNuevo)
-                    .addComponent(btnModi))
-                .addGap(18, 18, Short.MAX_VALUE)
+                    .addComponent(btnModi)
+                    .addComponent(btnGuardar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jframesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -300,28 +318,53 @@ public class Empleados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-            // TODO add your handling code here:
-            try {
-        conexion cc = new conexion();
-        Connection cn = cc.getConexion();
-        PreparedStatement ps = cn.prepareStatement("INSERT INTO empleados (nombre, puesto, telefono, salario) VALUES (?,?,?,?)");
-
-        ps.setString(1, txtNombre.getText());
-        ps.setString(2, txtPuesto.getText());
-        ps.setString(3, txtTelefono.getText());
-        ps.setDouble(4, Double.parseDouble(txxtSalario.getText())); 
-
-        ps.executeUpdate();
-        JOptionPane.showMessageDialog(null, "Empleado guardado con éxito");
-
-        mostrarDatos();   
-        limpiarFormulario(); 
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al guardar: " + e.toString());
+    
+    if (!camposEstanLlenos()) {
+        JOptionPane.showMessageDialog(this, "Error: Todos los campos son obligatorios.");
+        return; 
     }
-        mostrarDatos();
-        limpiarFormulario();
+
+    String telefono = txtTelefono.getText().trim();
+
+  
+    if (telefono.matches("[0-9]{10}")) {
+        
+
+        try {
+            conexion cc = new conexion();
+            Connection cn = cc.getConexion();
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO empleados (nombre, puesto, telefono, salario) VALUES (?,?,?,?)");
+
+            ps.setString(1, txtNombre.getText());
+            ps.setString(2, txtPuesto.getText());
+            ps.setString(3, telefono); 
+
+            try {
+                ps.setDouble(4, Double.parseDouble(txxtSalario.getText())); 
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Error: El salario debe ser un número válido (ej: 1200.50)");
+                return; 
+            }
+
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Empleado guardado con éxito");
+
+
+            mostrarDatos();   
+            limpiarFormulario(); 
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error de base de datos: " + e.getMessage());
+        }
+
+    } else {        
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Error: El teléfono debe contener exactamente 10 dígitos numéricos.", 
+            "Dato incorrecto", 
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+
+        txtTelefono.requestFocus(); 
+    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
@@ -334,11 +377,8 @@ public class Empleados extends javax.swing.JFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
      if (jTextField1.getText().isEmpty()) {
         JOptionPane.showMessageDialog(this, "Selecciona un empleado de la tabla primero.");
-        
         return;
     }
-
-    
     txtNombre.setEditable(true);
     txtPuesto.setEditable(true);
     txtTelefono.setEditable(true);
@@ -379,20 +419,19 @@ public class Empleados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        
+       
     txtNombre.setText("");
     txtPuesto.setText("");
     txtTelefono.setText("");
     txxtSalario.setText("");
     jTextField1.setText("");
-    
-    // Desactivamos
+
     txtNombre.setEditable(false);
     txtPuesto.setEditable(false);
     txtTelefono.setEditable(false);
     txxtSalario.setEditable(false);
     
+    btnNuevo.setEnabled(true);
     btnGuardar.setEnabled(false);
     btnModificar.setEnabled(false);
     btnBorrar.setEnabled(false);
@@ -482,47 +521,81 @@ public class Empleados extends javax.swing.JFrame {
 
     private void btnModiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModiActionPerformed
         // TODO add your handling code here:
-        try {
+        if (!camposEstanLlenos()) {
+        JOptionPane.showMessageDialog(this, "Error: Todos los campos son obligatorios.");
+        return; 
+    }
+
+    String telefono = txtTelefono.getText().trim();
+
+    if (!telefono.matches("[0-9]{10}")) {
+        JOptionPane.showMessageDialog(this, "Error: El teléfono debe contener exactamente 10 dígitos numéricos.");
+        txtTelefono.requestFocus();
+        return; 
+    }
+
+    try {
         conexion cc = new conexion();
         Connection cn = cc.getConexion();
-        
         
         String sql = "UPDATE empleados SET nombre=?, puesto=?, telefono=?, salario=? WHERE idEmpleado=?";
         PreparedStatement ps = cn.prepareStatement(sql);
 
         ps.setString(1, txtNombre.getText());
         ps.setString(2, txtPuesto.getText());
-        ps.setString(3, txtTelefono.getText());
-        
+        ps.setString(3, telefono); 
         
         try {
             ps.setDouble(4, Double.parseDouble(txxtSalario.getText()));
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El salario debe ser un número.");
+            JOptionPane.showMessageDialog(this, "El salario debe ser un número válido.");
             return;
         }
         
-      
         ps.setInt(5, Integer.parseInt(jTextField1.getText()));
 
         int resultado = ps.executeUpdate();
         
         if (resultado > 0) {
-            JOptionPane.showMessageDialog(null, "Cambios guardados");
+            JOptionPane.showMessageDialog(null, "Cambios guardados correctamente");
             mostrarDatos();
             limpiarFormulario();
-
-         
             btnModi.setEnabled(false); 
             txtNombre.setEditable(false);
             txxtSalario.setEditable(false);
-
+            
         }
 
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Error en Azure: " + e.getMessage());
-            }
+    } catch (SQLException e) {
+       
+        JOptionPane.showMessageDialog(null, "Error en Azure: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnModiActionPerformed
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+
+    char c = evt.getKeyChar();
+    if (!Character.isDigit(c)) {
+        evt.consume();
+    }    
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+   
+        char c = evt.getKeyChar();
+   
+        if  (!Character.isLetter(c) && c != java.awt.event.KeyEvent.VK_SPACE) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtPuestoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPuestoKeyTyped
+        char c = evt.getKeyChar();
+        // Si NO es una letra y NO es un espacio, se consume el evento (se ignora)
+        if (!Character.isLetter(c) && c != java.awt.event.KeyEvent.VK_SPACE) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPuestoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -574,7 +647,7 @@ public class Empleados extends javax.swing.JFrame {
     DefaultTableModel modelo = new DefaultTableModel(null, nombresColumnas) {
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false; // Esto hace que ninguna celda sea editable con doble clic
+            return false; 
         }
     };
     
@@ -615,7 +688,16 @@ public class Empleados extends javax.swing.JFrame {
     btnModificar.setEnabled(false);
     btnBorrar.setEnabled(false);
 }
-    
+private boolean camposEstanLlenos() {
+    if (txtNombre.getText().trim().isEmpty() || 
+        txtPuesto.getText().trim().isEmpty() || 
+        txtTelefono.getText().trim().isEmpty() || 
+        txxtSalario.getText().trim().isEmpty()) {
+        
+        return false; 
+    }
+    return true; 
+}    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

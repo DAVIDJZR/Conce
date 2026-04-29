@@ -17,13 +17,7 @@ public class Proveedores extends javax.swing.JFrame {
     initComponents();
     this.setLocationRelativeTo(null);
     mostrarDatos();
-    btnCancelar.setEnabled(false);
-    txtEmpresa.setEnabled(false);
-    txtTelefono.setEnabled(false);
-
-    btnModificar.setEnabled(false);
-    btnBorrar.setEnabled(false);
-    btnGuardarCambios.setEnabled(false);
+    inicio();
 
     
     txtEmpresa.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -110,10 +104,22 @@ public void mostrarDatos() {
 
         jLabel3.setText("Teléfono");
 
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
+
         btnGuardar.setText("REGISTRAR PROVEEDOR");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
+            }
+        });
+
+        txtEmpresa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEmpresaKeyTyped(evt);
             }
         });
 
@@ -207,11 +213,11 @@ public void mostrarDatos() {
                         .addGap(413, 413, 413)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(btnGuardar)
-                        .addGap(65, 65, 65)
+                        .addGap(33, 33, 33)
                         .addComponent(btnNuevo)
-                        .addGap(62, 62, 62)
+                        .addGap(67, 67, 67)
+                        .addComponent(btnGuardar)
+                        .addGap(53, 53, 53)
                         .addComponent(btnCancelar)
                         .addGap(44, 44, 44)
                         .addComponent(btnModificar)
@@ -238,12 +244,12 @@ public void mostrarDatos() {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnGuardar)
                             .addComponent(btnModificar)
                             .addComponent(btnGuardarCambios)
                             .addComponent(btnBorrar)
                             .addComponent(btnNuevo)
-                            .addComponent(btnCancelar)))
+                            .addComponent(btnCancelar)
+                            .addComponent(btnGuardar)))
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(jButton1)
@@ -254,40 +260,38 @@ public void mostrarDatos() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-      // Validación de campos vacíos
-    if (txtEmpresa.getText().trim().isEmpty() || txtTelefono.getText().trim().isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Error: Los campos no pueden estar vacíos.");
-        return;
+
+    if (!camposEstanLlenos()) {
+        JOptionPane.showMessageDialog(this, "Error: Debe llenar todos los campos del proveedor.");
+        return; 
+    }
+    String telefono = txtTelefono.getText().trim();
+
+    if (!telefono.matches("[0-9]{10}")) {
+        JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 10 dígitos.");
+        txtTelefono.requestFocus();
+        return; 
     }
 
     try {
         conexion cc = new conexion();
         Connection cn = cc.getConexion();
-        
-   
-        String sql = "INSERT INTO proveedores (nombre_empresa, telefono) VALUES (?, ?)";
-        
-        PreparedStatement pst = cn.prepareStatement(sql);
-        pst.setString(1, txtEmpresa.getText().trim());
-        pst.setString(2, txtTelefono.getText().trim());
-        
-        int n = pst.executeUpdate();
-        
-        if (n > 0) {
-            JOptionPane.showMessageDialog(null, "¡Proveedor registrado con éxito!");
-                mostrarDatos();
-            txtEmpresa.setText("");
-            txtTelefono.setText("");
-            
-        }
-        
-        cn.close();
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error SQL: " + e.getMessage());
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-    }
 
+        String sql = "INSERT INTO proveedores (nombre_empresa, telefono) VALUES (?, ?)";
+        PreparedStatement ps = cn.prepareStatement(sql);
+
+        ps.setString(1, txtEmpresa.getText().trim());
+        ps.setString(2, telefono);
+
+        ps.executeUpdate();
+        JOptionPane.showMessageDialog(null, "¡Proveedor registrado con éxito!");
+
+        mostrarDatos();   
+        inicio(); 
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al guardar en la base: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -298,44 +302,55 @@ public void mostrarDatos() {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-       // Desbloqueamos los campos para escribir
-    txtEmpresa.setEnabled(true);
-    txtTelefono.setEnabled(true);
 
-    btnGuardarCambios.setEnabled(true);
-
+    estadoEditando();
     txtEmpresa.requestFocus();
-    btnCancelar.setEnabled(true);
+
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        // TODO add your handling code here:
-        int fila = tblProveedores.getSelectedRow();
-    if (fila < 0) {
-        JOptionPane.showMessageDialog(null, "Primero seleccione un proveedor de la tabla");
-        return;
+     
+    if (!camposEstanLlenos()) {
+        JOptionPane.showMessageDialog(this, "Error: No puede dejar campos vacíos al modificar.");
+        return; 
     }
 
-    String id = tblProveedores.getValueAt(fila, 0).toString();
-    
+    String telefono = txtTelefono.getText().trim();
+
+    if (!telefono.matches("[0-9]{10}")) {
+        JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 10 dígitos.");
+        txtTelefono.requestFocus();
+        return; 
+    }
     try {
+        
+        int fila = tblProveedores.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un proveedor de la tabla.");
+            return;
+        }
+        String id = tblProveedores.getValueAt(fila, 0).toString();
+
         conexion cc = new conexion();
         Connection cn = cc.getConexion();
+        
         String sql = "UPDATE proveedores SET nombre_empresa=?, telefono=? WHERE idProveedor=?";
-        
-        PreparedStatement pst = cn.prepareStatement(sql);
-        pst.setString(1, txtEmpresa.getText().trim());
-        pst.setString(2, txtTelefono.getText().trim());
-        pst.setString(3, id);
-        
-        pst.executeUpdate();
-        mostrarDatos();
-        limpiarCampos();
-        JOptionPane.showMessageDialog(null, "Registro actualizado correctamente");
-        
-    } catch (Exception e) {
+        PreparedStatement ps = cn.prepareStatement(sql);
+
+        ps.setString(1, txtEmpresa.getText().trim());
+        ps.setString(2, telefono);
+        ps.setString(3, id);
+
+        int resultado = ps.executeUpdate();
+        if (resultado > 0) {
+            JOptionPane.showMessageDialog(null, "Proveedor actualizado correctamente");
+            mostrarDatos();
+            inicio(); 
+        }
+
+    } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, "Error al actualizar: " + e.getMessage());
-    }
+    }  
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
@@ -360,7 +375,7 @@ public void mostrarDatos() {
             pst.setString(1, id);
             
             pst.executeUpdate();
-            mostrarDatos(); // Refrescar tabla
+            mostrarDatos();
             limpiarCampos();
             JOptionPane.showMessageDialog(null, "Proveedor eliminado");
             
@@ -373,17 +388,7 @@ public void mostrarDatos() {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
        
-    txtEmpresa.setText("");
-    txtTelefono.setText("");
-    tblProveedores.clearSelection();
-    
-   
-    btnGuardar.setEnabled(true);         
-    btnModificar.setEnabled(false);      
-    btnBorrar.setEnabled(false);
-    btnGuardarCambios.setEnabled(false);
-    btnCancelar.setEnabled(true);
-      
+    estadoNuevoRegistro();
     txtEmpresa.requestFocus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -396,11 +401,7 @@ public void mostrarDatos() {
         txtEmpresa.setText(tblProveedores.getValueAt(fila, 1).toString());
         txtTelefono.setText(tblProveedores.getValueAt(fila, 2).toString());
 
-        btnModificar.setEnabled(true);
-        btnBorrar.setEnabled(true);
-        btnGuardarCambios.setEnabled(true);
-
-        btnGuardar.setEnabled(false);
+        estadoRegistroSeleccionado();
     }
     }//GEN-LAST:event_tblProveedoresMouseClicked
 
@@ -410,15 +411,7 @@ public void mostrarDatos() {
         txtEmpresa.setText(tblProveedores.getValueAt(fila, 1).toString());
         txtTelefono.setText(tblProveedores.getValueAt(fila, 2).toString());
 
-        // Bloqueamos textos y el botón de guardar cambios
-        txtEmpresa.setEnabled(false);
-        txtTelefono.setEnabled(false);
-        btnGuardarCambios.setEnabled(false); // <--- ESTE SE QUEDA APAGADO
-
-        btnModificar.setEnabled(true);
-        btnBorrar.setEnabled(true);
-        btnGuardar.setEnabled(false);
-        btnCancelar.setEnabled(true);
+        estadoRegistroSeleccionado();
         }
     }//GEN-LAST:event_tblProveedoresMousePressed
 
@@ -440,6 +433,22 @@ public void mostrarDatos() {
 
     System.out.println("Acción cancelada y formulario reseteado.");
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtEmpresaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmpresaKeyTyped
+        char c = evt.getKeyChar();
+       
+        if (Character.isDigit(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtEmpresaKeyTyped
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if(Character.isLetter(c) && c != java.awt.event.KeyEvent.VK_SPACE){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -482,6 +491,61 @@ public void mostrarDatos() {
     txtTelefono.setText("");
     }
     
+    private void inicio() {
+    limpiarCampos();
+    txtEmpresa.setEnabled(false);
+    txtTelefono.setEnabled(false);
+    
+    btnNuevo.setEnabled(true);
+    btnGuardar.setEnabled(false);
+    btnCancelar.setEnabled(false);
+    btnModificar.setEnabled(false);
+    btnGuardarCambios.setEnabled(false);
+    btnBorrar.setEnabled(false);
+}
+    private void estadoNuevoRegistro() {
+    txtEmpresa.setEnabled(true);
+    txtTelefono.setEnabled(true);
+    txtEmpresa.requestFocus();
+    
+    btnNuevo.setEnabled(false);
+    btnCancelar.setEnabled(true);
+    btnGuardar.setEnabled(true);
+    btnGuardarCambios.setEnabled(false);
+    btnModificar.setEnabled(false);
+    btnBorrar.setEnabled(false);
+}
+ private void estadoRegistroSeleccionado() {
+    txtEmpresa.setEnabled(false);
+    txtTelefono.setEnabled(false);
+    
+    btnNuevo.setEnabled(true);
+    btnCancelar.setEnabled(true);
+    btnGuardar.setEnabled(false);
+    btnModificar.setEnabled(true);
+    btnBorrar.setEnabled(true);
+    btnGuardarCambios.setEnabled(false);
+}   
+    private void estadoEditando() {
+    txtEmpresa.setEnabled(true);
+    txtTelefono.setEnabled(true);
+    txtEmpresa.requestFocus();
+    
+    btnNuevo.setEnabled(false);
+    btnCancelar.setEnabled(true);
+    btnGuardar.setEnabled(false);
+    btnGuardarCambios.setEnabled(true);
+    btnModificar.setEnabled(false);
+    btnBorrar.setEnabled(false);
+}
+    
+private boolean camposEstanLlenos() {
+    if (txtEmpresa.getText().trim().isEmpty() || 
+        txtTelefono.getText().trim().isEmpty()) {
+        return false; 
+    }
+    return true; 
+}   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCancelar;

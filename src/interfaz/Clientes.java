@@ -34,6 +34,9 @@ void habilitar(){
     txtTelefono.setEnabled(true);
     txtApat.setEnabled(true);
     txtAmat.setEnabled(true);
+    btnCambios.setEnabled(false);
+    btnEditar.setEnabled(false);
+    btnEliminar.setEnabled(false);
     }
     
     void inhabilitar(){
@@ -42,6 +45,27 @@ void habilitar(){
     txtTelefono.setEnabled(false);
     txtApat.setEnabled(false);
     txtAmat.setEnabled(false);
+    btnNuevo.setEnabled(true);
+    btnCambios.setEnabled(false);
+    btnEditar.setEnabled(false);
+    btnCambios.setEnabled(false);
+    btnEliminar.setEnabled(false);
+    }
+    
+    void editar (){
+        btnGuardar.setEnabled(false);
+        btnNuevo.setEnabled(false);
+        btnCambios.setEnabled(true);
+    }
+    
+    void cambios(){
+        btnGuardar.setEnabled(false);
+        btnNuevo.setEnabled(false);
+        btnCambios.setEnabled(false);
+        btnNuevo.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        btnEditar.setEnabled(true);
+        
     }
     
  void vacio(){
@@ -119,7 +143,7 @@ void habilitar(){
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCambios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -213,6 +237,11 @@ void habilitar(){
 
             }
         ));
+        tablaCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaClienteMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaCliente);
 
         btnGuardar.setText("Guardar");
@@ -236,10 +265,10 @@ void habilitar(){
             }
         });
 
-        jButton2.setText("Guardar Edicion");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnCambios.setText("Guardar Edicion");
+        btnCambios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnCambiosActionPerformed(evt);
             }
         });
 
@@ -291,7 +320,7 @@ void habilitar(){
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBuscar)
-                    .addComponent(jButton2))
+                    .addComponent(btnCambios))
                 .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -325,7 +354,7 @@ void habilitar(){
                     .addComponent(jLabel6)
                     .addComponent(btnEditar)
                     .addComponent(btnEliminar)
-                    .addComponent(jButton2))
+                    .addComponent(btnCambios))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -461,11 +490,10 @@ inhabilitar();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-
-        txtNombre.setEnabled(true);
-   txtApat.setEnabled(true);
-   txtAmat.setEnabled(true);
-   txtTelefono.setEnabled(true);
+    editar();
+    txtNombre.setEnabled(true);
+    txtApat.setEnabled(true);
+    txtTelefono.setEnabled(true);
         int fila = tablaCliente.getSelectedRow();
        if (fila != -1) {
     String nombre = tablaCliente.getValueAt(fila, 1).toString();
@@ -474,7 +502,7 @@ inhabilitar();
     String telefono = tablaCliente.getValueAt(fila, 4).toString();
 
    
-    // Ahora los colocas en los JTextField correspondiente
+    
     txtApat.setText(apPat);
     txtAmat.setText(apMat);
     txtNombre.setText(nombre);
@@ -511,7 +539,7 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiosActionPerformed
 if (txtNombre.getText().isEmpty() ||
     txtApat.getText().isEmpty() ||
     txtAmat.getText().isEmpty() ||
@@ -548,7 +576,7 @@ inhabilitar();
 cargartabla();
         cargartabla();
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnCambiosActionPerformed
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
 char c = evt.getKeyChar();
@@ -595,6 +623,11 @@ if (!Character.isDigit(c)) {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtbuscarKeyTyped
 
+    private void tablaClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClienteMouseClicked
+        // TODO add your handling code here:
+        cambios();
+    }//GEN-LAST:event_tablaClienteMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -632,13 +665,13 @@ if (!Character.isDigit(c)) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCambios;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
