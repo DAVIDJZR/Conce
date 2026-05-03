@@ -299,18 +299,19 @@ public class Compras extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 42, Short.MAX_VALUE)
                         .addComponent(btnNuevo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(26, 26, 26)
                         .addComponent(btnGuardar)
-                        .addGap(42, 42, 42)
+                        .addGap(27, 27, 27)
                         .addComponent(btnCancelar)
-                        .addGap(28, 28, 28)
+                        .addGap(27, 27, 27)
                         .addComponent(btnEliminar)
-                        .addGap(50, 50, 50)
+                        .addGap(36, 36, 36)
                         .addComponent(btnEditar)
-                        .addGap(62, 62, 62)
+                        .addGap(42, 42, 42)
                         .addComponent(btnCambios)
-                        .addGap(76, 76, 76))
+                        .addGap(64, 64, 64))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -508,8 +509,8 @@ public class Compras extends javax.swing.JFrame {
 
         if(n > 0){
             JOptionPane.showMessageDialog(null, "Compra registrada exitosamente");
-            cargartabla(""); // Refresca la tabla para ver la nueva compra
-            inhabilitar();   // Limpia y bloquea los campos
+            cargartabla(""); 
+            inhabilitar();   
         }
 
     } catch (SQLException e) {

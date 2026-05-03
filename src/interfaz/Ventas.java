@@ -51,7 +51,7 @@ public class Ventas extends javax.swing.JFrame {
 }
     public String obtenerFecha(JDateChooser dateChooser) {
     java.util.Date hoy = new java.util.Date();
-    dateChooser.setDate(hoy); // siempre pone la fecha actual
+    dateChooser.setDate(hoy); 
 
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
     return formato.format(hoy);
@@ -117,7 +117,7 @@ private void llenarCombo() {
     DefaultTableModel modelo = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false; // Hace la tabla solo de lectura
+            return false; 
         }
     };
 
@@ -129,7 +129,7 @@ private void llenarCombo() {
     modelo.addColumn("Total");
     modelo.addColumn("Estado Auto");
     modelo.addColumn("Método de Pago");
-    modelo.addColumn("Estado de Pago"); // solo visual
+    modelo.addColumn("Estado de Pago");
 
     tblVentas.setModel(modelo);
 
@@ -320,7 +320,6 @@ private void llenarCombo() {
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -332,41 +331,39 @@ private void llenarCombo() {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(cmbEmpleado, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)))
-                                .addGap(36, 36, 36)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(36, 36, 36)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel6)
-                                                .addGap(32, 32, 32)
-                                                .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel13)
-                                                    .addComponent(jLabel12))
-                                                .addGap(33, 33, 33)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(cmbMetododepago, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(cmbEstadodepago, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel6)
+                                                        .addGap(32, 32, 32)
+                                                        .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGap(20, 20, 20)
+                                                        .addComponent(btnGenerarPDF)))
+                                                .addGap(28, 28, 28))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGap(20, 20, 20)
-                                                .addComponent(btnGenerarPDF)))
-                                        .addGap(28, 28, 28))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                                        .addGap(149, 149, 149)
+                                        .addComponent(cmbMetododepago, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -375,7 +372,17 @@ private void llenarCombo() {
                             .addComponent(txtTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jButton2)
-                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addGap(36, 36, 36)
+                                .addComponent(cmbEstadodepago, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(0, 89, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,48 +409,62 @@ private void llenarCombo() {
                     .addComponent(jLabel7)
                     .addComponent(txtTelefonoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel8)
-                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbAuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel9)
+                            .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbAuto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cmbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addGap(32, 32, 32)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel13)
+                                    .addComponent(cmbEstadodepago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(btnLimpiar)
+                            .addComponent(jButton2)
+                            .addComponent(btnEliminar))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnGenerarPDF)
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(cmbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(cmbMetododepago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel13)
-                        .addComponent(cmbEstadodepago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(btnLimpiar)
-                    .addComponent(jButton2)
-                    .addComponent(btnEliminar))
-                .addGap(18, 18, 18)
-                .addComponent(btnGenerarPDF)
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbMetododepago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel12)))
                 .addGap(63, 63, 63))
         );
 
@@ -451,109 +472,104 @@ private void llenarCombo() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-if (cmbCliente.getSelectedIndex() == 0 ||
-    cmbAuto.getSelectedIndex() == 0 ||
-    cmbEmpleado.getSelectedIndex() == 0 ||
-    cmbMetododepago.getSelectedIndex() == 0) {
+      
+    if (cmbCliente.getSelectedIndex() <= 0 ||
+        cmbAuto.getSelectedIndex() <= 0 ||
+        cmbEmpleado.getSelectedIndex() <= 0 ||
+        cmbMetododepago.getSelectedIndex() <= 0 ||
+        txtTotal.getText().isEmpty()) {
 
-    JOptionPane.showMessageDialog(null, "Completa todos los campos");
-    return;
-}
-
-try {
-    conexion cc = new conexion();
-    Connection cn = cc.getConexion();
-
-    
-    PreparedStatement pstC = cn.prepareStatement(
-        "SELECT idCliente FROM cliente WHERE nombre = ?"
-    );
-    pstC.setString(1, cmbCliente.getSelectedItem().toString());
-    ResultSet rsC = pstC.executeQuery();
-
-    if (!rsC.next()) {
-        JOptionPane.showMessageDialog(null, "Cliente no encontrado");
+        JOptionPane.showMessageDialog(this, "⚠️ Por favor, completa todas las selecciones y campos.");
         return;
     }
-    int idCliente = rsC.getInt("idCliente");
+    try {
+        double costoBase = Double.parseDouble(txtPrecio.getText());
+        double precioVenta = Double.parseDouble(txtTotal.getText());
+        String clienteNombre = cmbCliente.getSelectedItem().toString();
+        String autoNombreFull = cmbAuto.getSelectedItem().toString();
+        String empleadoNombre = cmbEmpleado.getSelectedItem().toString();
+        String metodoPago = cmbMetododepago.getSelectedItem().toString();
 
-    
-    PreparedStatement pstA = cn.prepareStatement(
-        "SELECT idAuto, stock FROM autos WHERE CONCAT(marca, ' ', modelo) = ?"
-    );
-    pstA.setString(1, cmbAuto.getSelectedItem().toString());
-    ResultSet rsA = pstA.executeQuery();
+        if (precioVenta < costoBase) {
+            JOptionPane.showMessageDialog(this, "❌ ERROR: El precio de venta ($" + precioVenta + 
+                ") es menor al costo ($" + costoBase + "). ¡Venta bloqueada!");
+            return;
+        }
 
-    if (!rsA.next()) {
-        JOptionPane.showMessageDialog(null, "Auto no encontrado");
-        return;
+        int confirmar = JOptionPane.showConfirmDialog(this, "¿Registrar venta por $" + precioVenta + "?", 
+                "Confirmar Venta", JOptionPane.YES_NO_OPTION);
+        if (confirmar != JOptionPane.YES_OPTION) return;
+
+        conexion cc = new conexion();
+        Connection cn = cc.getConexion();
+
+        int idCliente = 0;
+        PreparedStatement pstC = cn.prepareStatement("SELECT idCliente FROM cliente WHERE nombre = ?");
+        pstC.setString(1, clienteNombre);
+        ResultSet rsC = pstC.executeQuery();
+        if (rsC.next()) idCliente = rsC.getInt("idCliente");
+
+        int idAuto = 0;
+        int stockActual = 0;
+        PreparedStatement pstA = cn.prepareStatement("SELECT idAuto, stock FROM autos WHERE CONCAT(marca, ' ', modelo) = ?");
+        pstA.setString(1, autoNombreFull);
+        ResultSet rsA = pstA.executeQuery();
+        if (rsA.next()) {
+            idAuto = rsA.getInt("idAuto");
+            stockActual = rsA.getInt("stock");
+        }
+
+        if (stockActual <= 0) {
+            JOptionPane.showMessageDialog(this, "❌ El auto seleccionado ya no tiene stock disponible.");
+            cn.close();
+            return;
+        }
+
+        int idEmpleado = 0;
+        PreparedStatement pstE = cn.prepareStatement("SELECT idEmpleado FROM empleados WHERE nombre = ?");
+        pstE.setString(1, empleadoNombre);
+        ResultSet rsE = pstE.executeQuery();
+        if (rsE.next()) idEmpleado = rsE.getInt("idEmpleado");
+
+        String sqlVenta = "INSERT INTO ventas (fecha, totaldelaventa, idEmpleado, idCliente, idAuto, tipPag) VALUES (?,?,?,?,?,?)";
+        PreparedStatement pstVenta = cn.prepareStatement(sqlVenta);
+        
+
+        java.sql.Date fechaSql = new java.sql.Date(txtFecha.getDate().getTime());
+        
+        pstVenta.setDate(1, fechaSql);
+        pstVenta.setDouble(2, precioVenta);
+        pstVenta.setInt(3, idEmpleado);
+        pstVenta.setInt(4, idCliente);
+        pstVenta.setInt(5, idAuto);
+        pstVenta.setString(6, metodoPago);
+        pstVenta.executeUpdate();
+
+        PreparedStatement pstStock = cn.prepareStatement("UPDATE autos SET stock = stock - 1 WHERE idAuto = ?");
+        pstStock.setInt(1, idAuto);
+        pstStock.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "✅ Venta registrada y stock actualizado correctamente.");
+        
+        mostrarVentas(); 
+        llenarCombo();   
+        limpiarCampos(); 
+        
+        txtMarca.setText("");
+        txtModelo.setText("");
+        txtPrecio.setText("");
+        txtEstado.setText("");
+        txtTotal.setText("");
+
+        cn.close();
+
+    } catch (NullPointerException e) {
+        JOptionPane.showMessageDialog(this, "❌ Error: Asegúrate de seleccionar una fecha válida.");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "❌ Error: Formato de precio inválido.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "❌ Error de base de datos: " + e.getMessage());
     }
-
-    int idAuto = rsA.getInt("idAuto");
-    int stock = rsA.getInt("stock");
-
-    if (stock <= 0) {
-        JOptionPane.showMessageDialog(null, "Ya no hay stock de este auto");
-        return;
-    }
-
-   
-    PreparedStatement pstE = cn.prepareStatement(
-        "SELECT idEmpleado FROM empleados WHERE nombre = ?"
-    );
-    pstE.setString(1, cmbEmpleado.getSelectedItem().toString());
-    ResultSet rsE = pstE.executeQuery();
-
-    if (!rsE.next()) {
-        JOptionPane.showMessageDialog(null, "Empleado no encontrado");
-        return;
-    }
-    int idEmpleado = rsE.getInt("idEmpleado");
-
-   
-    String metodoPago = cmbMetododepago.getSelectedItem().toString();
-
-  
-    PreparedStatement pst = cn.prepareStatement(
-        "INSERT INTO ventas (fecha, totaldelaventa, idEmpleado, idCliente, idAuto, tipPag) VALUES (?,?,?,?,?,?)"
-    );
-
-    java.sql.Date fecha = new java.sql.Date(txtFecha.getDate().getTime());
-
-    pst.setDate(1, fecha);
-    pst.setDouble(2, Double.parseDouble(txtTotal.getText()));
-    pst.setInt(3, idEmpleado);
-    pst.setInt(4, idCliente);
-    pst.setInt(5, idAuto);
-    pst.setString(6, metodoPago);
-
-    pst.executeUpdate();
-
-    
-    PreparedStatement pstStock = cn.prepareStatement(
-        "UPDATE autos SET stock = stock - 1 WHERE idAuto = ?"
-    );
-    pstStock.setInt(1, idAuto);
-    pstStock.executeUpdate();
-
-    
-    if (stock - 1 == 0) {
-        JOptionPane.showMessageDialog(null, "Este auto se ha quedado sin stock");
-    }
-
-    JOptionPane.showMessageDialog(null, "Venta registrada con éxito");
-
-    llenarCombo();
-    mostrarVentas();
-    limpiarCampos();
-
-    cn.close();
-
-} catch (NumberFormatException e) {
-    JOptionPane.showMessageDialog(null, "Datos numéricos inválidos");
-} catch (SQLException e) {
-    JOptionPane.showMessageDialog(null, "Error SQL: " + e.getMessage());
-}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tblVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVentasMouseClicked
@@ -562,6 +578,7 @@ int fila = tblVentas.getSelectedRow();
 if (fila >= 0) {
     idVentaSeleccionada = Integer.parseInt(tblVentas.getValueAt(fila, 0).toString());
     btnEliminar.setEnabled(true);
+    btnGenerarPDF.setEnabled(true);
 }
     }//GEN-LAST:event_tblVentasMouseClicked
 
@@ -645,66 +662,56 @@ if (fila >= 0) {
     }//GEN-LAST:event_cmbClienteItemStateChanged
 
     private void cmbAutoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbAutoItemStateChanged
-        // TODO add your handling code here:
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-    
-    String autoSeleccionado = cmbAuto.getSelectedItem().toString();
+        
+        String autoSeleccionado = cmbAuto.getSelectedItem().toString();
 
-    if (autoSeleccionado.equals("Seleccione un auto")) {
-        txtMarca.setText("");
-        txtModelo.setText("");
-        txtPrecio.setText("");
-        txtEstado.setText("");
-        txtTotal.setText("");
-        return;
-    }
-
-    try {
-        conexion cc = new conexion();
-        Connection cn = cc.getConexion();
-
-        PreparedStatement pst = cn.prepareStatement(
-            "SELECT marca, modelo, precio, estado FROM autos WHERE CONCAT(marca, ' ', modelo) = ?"
-        );
-
-        pst.setString(1, autoSeleccionado);
-        ResultSet rs = pst.executeQuery();
-
-        if (rs.next()) {
-            String estado = rs.getString("estado");
-            double precioOriginal = rs.getDouble("precio");
-            double totalFinal = precioOriginal;
-
-            txtMarca.setText(rs.getString("marca"));
-            txtModelo.setText(rs.getString("modelo"));
-            txtEstado.setText(estado);
-
-            if (estado.equalsIgnoreCase("vendido")) {
-                JOptionPane.showMessageDialog(null, "Este auto ya está vendido ⚠️");
-                txtPrecio.setText("");
-                txtTotal.setText("");
-                return;
-            }
-
-            if (estado.equalsIgnoreCase("usado")) {
-                totalFinal = precioOriginal * 0.90; // 10% descuento
-                JOptionPane.showMessageDialog(null, "Auto usado: 10% de descuento aplicado ");
-            }
-
-            txtPrecio.setText(String.valueOf(precioOriginal));
-            txtTotal.setText(String.valueOf(totalFinal));
-
-            txtTotal.setEditable(false);
-            txtPrecio.setEditable(false);
+        if (autoSeleccionado.equals("Seleccione un auto")) {
+            limpiarCampos(); 
+            txtMarca.setText("");
+            txtModelo.setText("");
+            txtPrecio.setText("");
+            txtEstado.setText("");
+            return;
         }
 
-        cn.close();
+        try {
+            conexion cc = new conexion();
+            Connection cn = cc.getConexion();
 
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener datos del auto: " + e);
+            PreparedStatement pst = cn.prepareStatement(
+                "SELECT marca, modelo, precio, estado FROM autos WHERE CONCAT(marca, ' ', modelo) = ?"
+            );
+            pst.setString(1, autoSeleccionado);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                String estado = rs.getString("estado");
+                double costoCompra = rs.getDouble("precio"); 
+                double precioVentaFinal;
+
+                txtMarca.setText(rs.getString("marca"));
+                txtModelo.setText(rs.getString("modelo"));
+                txtEstado.setText(estado);
+
+                if (estado.equalsIgnoreCase("usado")) {
+
+                    precioVentaFinal = costoCompra * 1.15; 
+                } else {
+
+                    precioVentaFinal = costoCompra * 1.25;
+                }
+
+                txtPrecio.setText(String.valueOf(costoCompra)); 
+                
+                txtTotal.setText(String.valueOf(precioVentaFinal)); 
+            }
+            cn.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener datos: " + e.getMessage());
+        }
     }
-}
-
     }//GEN-LAST:event_cmbAutoItemStateChanged
 
     private void cmbAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAutoActionPerformed
@@ -771,90 +778,117 @@ try {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnGenerarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarPDFActionPerformed
- 
+
+    if (idVentaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "⚠️ Por favor, selecciona una venta de la tabla para generar su comprobante.");
+        return;
+    }
+
     com.itextpdf.text.Document documento = new com.itextpdf.text.Document(com.itextpdf.text.PageSize.A4);
     String idUnico = String.valueOf(System.currentTimeMillis());
-    
-    String ruta = System.getProperty("user.home") + java.io.File.separator + "Factura_Venta_" + idUnico + ".pdf";
+    String ruta = System.getProperty("user.home") + java.io.File.separator + "Factura_Venta_" + idVentaSeleccionada + "_" + idUnico + ".pdf";
+
     try {
-        java.io.FileOutputStream archivoSalida = new java.io.FileOutputStream(ruta);
-        com.itextpdf.text.pdf.PdfWriter.getInstance(documento, archivoSalida);
-        documento.open();
+        conexion cc = new conexion();
+        Connection cn = cc.getConexion();
 
-       
-        com.itextpdf.text.BaseColor azulIPN = new com.itextpdf.text.BaseColor(0, 51, 102);
-        com.itextpdf.text.Font fuenteTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 20, com.itextpdf.text.Font.BOLD, azulIPN);
-        com.itextpdf.text.Font fuenteNegrita = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 11, com.itextpdf.text.Font.BOLD);
+        String sql = "SELECT v.idVenta, v.fecha, v.totaldelaventa, v.tipPag, " +
+                     "c.nombre AS cliente, c.telefono AS tel_cliente, " +
+                     "e.nombre AS empleado, " +
+                     "a.marca, a.modelo, a.estado AS estado_auto, a.precio AS precio_lista " +
+                     "FROM ventas v " +
+                     "LEFT JOIN cliente c ON v.idCliente = c.idCliente " +
+                     "LEFT JOIN empleados e ON v.idEmpleado = e.idEmpleado " +
+                     "LEFT JOIN autos a ON v.idAuto = a.idAuto " +
+                     "WHERE v.idVenta = ?";
 
-        com.itextpdf.text.Paragraph titulo = new com.itextpdf.text.Paragraph("CONCESIONARIA - COMPROBANTE DE VENTA\n\n", fuenteTitulo);
-        titulo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        documento.add(titulo);
+        PreparedStatement pst = cn.prepareStatement(sql);
+        pst.setInt(1, idVentaSeleccionada);
+        ResultSet rs = pst.executeQuery();
 
-       
-        String fechaStr = "";
-        if (txtFecha.getDate() != null) {
-            fechaStr = new java.text.SimpleDateFormat("dd/MM/yyyy").format(txtFecha.getDate());
+        if (rs.next()) {
+            java.io.FileOutputStream archivoSalida = new java.io.FileOutputStream(ruta);
+            com.itextpdf.text.pdf.PdfWriter.getInstance(documento, archivoSalida);
+
+            com.itextpdf.text.BaseColor azulIPN = new com.itextpdf.text.BaseColor(0, 51, 102); // Tu color institucional
+            com.itextpdf.text.Font fuenteTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 20, com.itextpdf.text.Font.BOLD, azulIPN);
+            com.itextpdf.text.Font fuenteNegrita = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 11, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font fuenteNormal = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.NORMAL);
+
+            com.itextpdf.text.Paragraph titulo = new com.itextpdf.text.Paragraph("CONCESIONARIA - COMPROBANTE DE VENTA\n\n", fuenteTitulo);
+            titulo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            documento.add(titulo);
+
+            documento.add(new com.itextpdf.text.Paragraph("Folio de Venta: " + rs.getInt("idVenta"), fuenteNegrita));
+            documento.add(new com.itextpdf.text.Paragraph("Fecha de Venta: " + rs.getString("fecha")));
+            documento.add(new com.itextpdf.text.Paragraph("Cliente: " + rs.getString("cliente"), fuenteNegrita));
+            documento.add(new com.itextpdf.text.Paragraph("Teléfono: " + rs.getString("tel_cliente")));
+            documento.add(new com.itextpdf.text.Paragraph("Vendedor: " + rs.getString("empleado")));
+            documento.add(new com.itextpdf.text.Paragraph("Método de Pago: " + rs.getString("tipPag")));
+            documento.add(new com.itextpdf.text.Paragraph("Estado de Pago: PAGADO")); 
+            documento.add(new com.itextpdf.text.Paragraph("______________________________________________________________________________\n\n"));
+
+
+            com.itextpdf.text.pdf.PdfPTable tabla = new com.itextpdf.text.pdf.PdfPTable(2);
+            tabla.setWidthPercentage(100);
+
+
+            com.itextpdf.text.pdf.PdfPCell h1 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Descripción", fuenteNegrita));
+            com.itextpdf.text.pdf.PdfPCell h2 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Valor", fuenteNegrita));
+            h1.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+            h2.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+            h1.setPadding(5);
+            h2.setPadding(5);
+            tabla.addCell(h1);
+            tabla.addCell(h2);
+
+            tabla.addCell("Auto Seleccionado:");
+            tabla.addCell(rs.getString("marca") + " " + rs.getString("modelo"));
+            
+            tabla.addCell("Marca:");
+            tabla.addCell(rs.getString("marca"));
+            
+            tabla.addCell("Modelo:");
+            tabla.addCell(rs.getString("modelo"));
+            
+            tabla.addCell("Estado físico:");
+            tabla.addCell(rs.getString("estado_auto").toUpperCase());
+            
+            tabla.addCell("Precio de Lista original:");
+            tabla.addCell("$ " + rs.getDouble("precio_lista"));
+
+            com.itextpdf.text.pdf.PdfPCell cellTotalLabel = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("TOTAL NETO PAGADO:", fuenteNegrita));
+            com.itextpdf.text.pdf.PdfPCell cellTotalValor = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("$ " + rs.getDouble("totaldelaventa"), fuenteNegrita));
+            cellTotalLabel.setPadding(8);
+            cellTotalValor.setPadding(8);
+            cellTotalValor.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+            tabla.addCell(cellTotalLabel);
+            tabla.addCell(cellTotalValor);
+
+            documento.add(tabla);
+
+            if (rs.getString("estado_auto").equalsIgnoreCase("usado")) {
+                documento.add(new com.itextpdf.text.Paragraph("\n* Nota: Unidad seminueva sujeta a revisión mecánica por parte del comprador."));
+            }
+            
+            documento.add(new com.itextpdf.text.Paragraph("\n\n\n\n__________________________\nFirma del Cliente"));
+            documento.add(new com.itextpdf.text.Paragraph("\nEste documento es un comprobante oficial de la transacción.", fuenteNormal));
+
+            documento.close();
+            archivoSalida.close();
+
+            java.io.File file = new java.io.File(ruta);
+            java.awt.Desktop.getDesktop().open(file);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "❌ Error: No se encontró la venta con Folio: " + idVentaSeleccionada);
         }
 
-        documento.add(new com.itextpdf.text.Paragraph("Fecha de Venta: " + fechaStr));
-        documento.add(new com.itextpdf.text.Paragraph("Cliente: " + cmbCliente.getSelectedItem().toString(), fuenteNegrita));
-        documento.add(new com.itextpdf.text.Paragraph("Empleado: " + cmbEmpleado.getSelectedItem().toString()));
-        documento.add(new com.itextpdf.text.Paragraph("Método de Pago: " + cmbMetododepago.getSelectedItem().toString()));
-        documento.add(new com.itextpdf.text.Paragraph("Estado de Pago: " + cmbEstadodepago.getSelectedItem().toString()));
-        documento.add(new com.itextpdf.text.Paragraph("______________________________________________________________________________\n\n"));
-
-       
-        com.itextpdf.text.pdf.PdfPTable tabla = new com.itextpdf.text.pdf.PdfPTable(2);
-        tabla.setWidthPercentage(100);
-
-        
-        com.itextpdf.text.pdf.PdfPCell h1 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Descripción", fuenteNegrita));
-        com.itextpdf.text.pdf.PdfPCell h2 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("Valor", fuenteNegrita));
-        h1.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
-        h2.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
-        tabla.addCell(h1);
-        tabla.addCell(h2);
-
-      
-        tabla.addCell("Auto Seleccionado:");
-        tabla.addCell(cmbAuto.getSelectedItem().toString());
-        tabla.addCell("Marca:");
-        tabla.addCell(txtMarca.getText());
-        tabla.addCell("Modelo:");
-        tabla.addCell(txtModelo.getText());
-        tabla.addCell("Estado físico:");
-        tabla.addCell(txtEstado.getText());
-        tabla.addCell("Precio de Lista:");
-        tabla.addCell("$" + txtPrecio.getText());
-
-       
-        com.itextpdf.text.pdf.PdfPCell cellTotalLabel = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("TOTAL A PAGAR:", fuenteNegrita));
-        com.itextpdf.text.pdf.PdfPCell cellTotalValor = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase("$" + txtTotal.getText(), fuenteNegrita));
-        cellTotalValor.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-        tabla.addCell(cellTotalLabel);
-        tabla.addCell(cellTotalValor);
-
-        documento.add(tabla);
-
-       
-        if (txtEstado.getText().equalsIgnoreCase("usado")) {
-            documento.add(new com.itextpdf.text.Paragraph("\n* Unidad seminueva sujeta a revisión mecánica."));
-        }
-        
-        documento.add(new com.itextpdf.text.Paragraph("\n\n\n\n__________________________\nFirma del Cliente"));
-
-      
-        documento.close();
-        archivoSalida.close();
-
-  
-        java.io.File file = new java.io.File(ruta);
-        java.awt.Desktop.getDesktop().open(file);
+        cn.close();
 
     } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + e.getMessage());
-    }       
-        
+        JOptionPane.showMessageDialog(null, "Error al generar el PDF detallado: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnGenerarPDFActionPerformed
 
     /**
